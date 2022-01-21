@@ -1,7 +1,8 @@
 use once_cell::sync::Lazy;
 use r2d2_postgres::{postgres::NoTls, PostgresConnectionManager};
 
-pub static POOL: Lazy<r2d2::Pool<PostgresConnectionManager<NoTls>>> = Lazy::new(|| {
+pub type ConnManager = r2d2_postgres::PostgresConnectionManager<NoTls>;
+pub static POOL: Lazy<r2d2::Pool<ConnManager>> = Lazy::new(|| {
     let manager = PostgresConnectionManager::new(
         format!(
             "host={} user={} password={} dbname={}",
