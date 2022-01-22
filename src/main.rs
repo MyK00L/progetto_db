@@ -4,9 +4,10 @@ use rocket_dyn_templates::Template;
 use rocket_sync_db_pools::database;
 use rocket_sync_db_pools::postgres::Client;
 mod db;
+mod routes;
 
 #[database("database")]
-struct DbConn(Client);
+pub struct DbConn(Client);
 
 #[get("/insert/<tablename>")]
 async fn insert_item(tablename: String, db: DbConn) -> Template {
@@ -58,5 +59,5 @@ fn rocket() -> _ {
     rocket::build()
         .attach(DbConn::fairing())
         .attach(Template::fairing())
-        .mount("/", routes![insert_item])
+        .mount("/", routes![insert_item, routes::station_timetable])
 }
