@@ -1,6 +1,3 @@
-{% extends "base" %}
-{% block title %}Users{% endblock title %}
-{% block content %}
 
 <h2>Insert new {{name}}</h2>
 <form method="post" action="/api/insert">
@@ -13,5 +10,4 @@
 	{% endfor %}
 </form>
 
-{% endblock content %}
 
