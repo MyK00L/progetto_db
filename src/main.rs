@@ -15,8 +15,8 @@ async fn train_status(train_number: i32, db: DbConn) -> Template {
     #[derive(Debug,Serialize)]
     struct Item {
         name: String,
-        scheduled_arrival: String,
-        arrival: String,
+        scheduled_arrival: chrono::NaiveDateTime,
+        arrival: Option<chrono::NaiveDateTime>,
     }
     #[derive(Debug,Serialize)]
     struct Context {
@@ -27,14 +27,14 @@ async fn train_status(train_number: i32, db: DbConn) -> Template {
         .run(move |conn| {
             conn
         .query(
-            "SELECT orario, data, Nome FROM PdPStazione, RitardoPdP WHERE RitardoPdP.numero = $1 AND RitardoPdP.idpdp = PdPStazione.IDPdP",
+            "SELECT orario, data, Nome FROM PdPStazione, RitardoPdP WHERE RitardoPdP.numero = $1 AND RitardoPdP.idpdp = PdPStazione.IDPdP ORDER BY orario",
             &[&train_number],
         ).unwrap()
         })
         .await;
     let context = Context{numero: train_number, items: cols.iter().map(|col| {
-        let orario: String = col.get("orario");
-        let data: String = col.get("data");
+        let orario: chrono::NaiveDateTime = col.get("orario");
+        let data: Option<chrono::NaiveDateTime> = col.get("data");
         let nome: String = col.get("Nome");
         Item {
             name: nome,
