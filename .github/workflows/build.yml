@@ -41,8 +41,9 @@ jobs:
       - uses: actions-rs/cargo@v1
         with:
           command: build
+          args: --release
       - name: 'Archive production artifacts'
         uses: actions/upload-artifact@v2
         with:
-          name: jar
+          name: binaries
           path: target/debug/progetto_db*
