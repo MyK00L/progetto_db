@@ -46,4 +46,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: binaries
-          path: target/debug/progetto_db*
+          path: target/release/progetto_db*
