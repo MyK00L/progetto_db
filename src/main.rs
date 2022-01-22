@@ -10,16 +10,14 @@ struct DbConn(Client);
 
 #[get("/insert/<tablename>")]
 async fn insert_item(tablename: String, db: DbConn) -> Template {
-    let mut context = Vec::<(String, String)>::new();
-    context.push(("table.name".to_owned(), tablename.to_owned()));
+    let mut context = vec![("table.name".to_owned(), tablename.to_owned())];
     let cols = db
         .run(move |conn| {
             conn
         .query(
             "SELECT column_name, data_type FROM information_schema.columns WHERE table_name = $1",
             &[&tablename],
-        )
-        .unwrap()
+        ).unwrap()
         })
         .await;
     for col in cols {
