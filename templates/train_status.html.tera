@@ -1,0 +1,14 @@
+{% extends "base" %}
+{% block title %}Stato treno{% endblock title %}
+{% block content %}
+
+<h2>Stato treno {{numero}}</h2>
+<main>
+{% for item in items %}
+<h3>{{item.nome}}</h3>
+<p>Arrivo programmato: {{item.scheduled_arrival}}</p>
+<p>Arrivo effettivo: {{item.arrival}}</p>
+{% endfor %}
+</main>
+
+{% endblock content %}
