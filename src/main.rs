@@ -45,6 +45,16 @@ fn rocket() -> _ {
     std::thread::spawn(|| {
         db::create_db().expect("Failed to create DB");
     });
+    std::env::set_var(
+        "ROCKET_DATABASES",
+        format!(
+            "{{database = {{ url = \"postgres://{}:{}@{}/{}\" }}}}",
+            std::env::var("DB_USER").unwrap(),
+            std::env::var("DB_PASSWORD").unwrap(),
+            std::env::var("DB_HOST").unwrap(),
+            std::env::var("DB_NAME").unwrap(),
+        ),
+    );
     rocket::build()
         .attach(DbConn::fairing())
         .attach(Template::fairing())
