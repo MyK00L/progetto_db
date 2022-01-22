@@ -23,7 +23,7 @@ pub async fn station_timetable(name: String, db: crate::DbConn) -> Template {
         .run(move |conn| {
             conn
         .query(
-            "SELECT Categoria, RitardoPdP.Numero, Orario, RitardoTreno.Ritardo, PdPStazione.* FROM RitardoPdP JOIN RitardoTreno ON RitardoTreno.Numero = RitardoPdP.Numero JOIN PdPStazione ON PdPStazione.IDPdP = RitardoPdP.IDPdP WHERE PdPStazione.Nome = $1 AND data IS NULL;",
+            "SELECT Categoria, RitardoPdP.Numero, Orario, RitardoTreno.Ritardo, PdPStazione.*, dst.Nome AS destinazione FROM RitardoPdP JOIN RitardoTreno ON RitardoTreno.Numero = RitardoPdP.Numero JOIN PdPStazione ON PdPStazione.IDPdP = RitardoPdP.IDPdP JOIN DestinazioneTreno dst ON dst.numero = RitardoPdP.Numero WHERE PdPStazione.Nome = $1 AND data IS NULL;",
             &[&name],
         )
         .unwrap()
@@ -38,7 +38,7 @@ pub async fn station_timetable(name: String, db: crate::DbConn) -> Template {
                 .map(|x| CtxLine {
                     categoria: x.get("categoria"),
                     numero_treno: x.get("numero"),
-                    destinazione: "todo!()".to_owned(),
+                    destinazione: x.get("destinazione"),
                     ora_arrivo_destinazione: "todo!()".to_owned(),
                     orario: x.get("orario"),
                     ritardo: x.get("ritardo"),
