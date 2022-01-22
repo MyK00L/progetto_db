@@ -24,8 +24,11 @@ jobs:
           command: clippy
           args: --no-deps -- -D warnings
   build:
-    name: Test
-    runs-on: ubuntu-latest
+    name: Build
+    runs-on: runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
     steps:
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
@@ -37,4 +40,4 @@ jobs:
       - uses: Swatinem/rust-cache@v1
       - uses: actions-rs/cargo@v1
         with:
-          command: build --release
+          command: build
