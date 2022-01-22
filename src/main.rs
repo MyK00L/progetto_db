@@ -47,13 +47,13 @@ async fn train_status(train_number: i32, db: DbConn) -> Template {
 
 #[get("/insert/<tablename>")]
 async fn insert_item(tablename: String, db: DbConn) -> Template {
-    #[derive(Debug,Serialize)]
+    #[derive(Debug, Serialize)]
     struct Column {
         name: String,
         r#type: String,
         is_required: bool,
     }
-    #[derive(Debug,Serialize)]
+    #[derive(Debug, Serialize)]
     struct Table {
         name: String,
         cols: Vec<Column>,
@@ -68,17 +68,23 @@ async fn insert_item(tablename: String, db: DbConn) -> Template {
         ).unwrap()
         })
         .await;
-    let context = Table{name: tablename, cols: cols.iter().map(|col| {
-        let column_name: String = col.get("column_name");
-        let column_type: String = col.get("data_type");
-        let is_nullable: String = "YES".to_owned();//col.get("is_nullable");
-        Column {
-            name: column_name,
-            r#type: column_type, // not
-            is_required: is_nullable == "NO",
-        }
-    }).collect()};
-    eprintln!("{:?}",context);
+    let context = Table {
+        name: tablename,
+        cols: cols
+            .iter()
+            .map(|col| {
+                let column_name: String = col.get("column_name");
+                let column_type: String = col.get("data_type");
+                let is_nullable: String = "YES".to_owned(); //col.get("is_nullable");
+                Column {
+                    name: column_name,
+                    r#type: column_type, // not
+                    is_required: is_nullable == "NO",
+                }
+            })
+            .collect(),
+    };
+    eprintln!("{:?}", context);
     Template::render("insert_item", &context)
 }
 

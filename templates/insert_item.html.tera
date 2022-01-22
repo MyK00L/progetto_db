@@ -1,3 +1,6 @@
+{% extends "base" %}
+{% block title %}{{name}}{% endblock title %}
+{% block content %}
 
 <h2>Insert new {{name}}</h2>
 <form method="post" action="/api/insert">
@@ -10,4 +13,4 @@
 	{% endfor %}
 </form>
 
-
+{% endblock content %}

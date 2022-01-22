@@ -5,14 +5,20 @@ use serde::Serialize;
 pub async fn station_timetable(name: String, db: crate::DbConn) -> Template {
     #[derive(Serialize)]
     struct Ctx {
+        rows: Vec<CtxLine>,
+        station: String,
+    }
+    #[derive(Serialize)]
+    struct CtxLine {
         categoria: String,
         numero_treno: i32,
         destinazione: String,
         ora_arrivo_destinazione: String,
-        orario: String,
-        ritardo: i32,
-        binario: i8,
+        orario: chrono::NaiveDateTime,
+        ritardo: f64,
+        binario: String,
     }
+    let station = name.clone();
     let cols = db
         .run(move |conn| {
             conn
@@ -25,17 +31,20 @@ pub async fn station_timetable(name: String, db: crate::DbConn) -> Template {
         .await;
     Template::render(
         "station_timetable",
-        &cols
-            .iter()
-            .map(|x| Ctx {
-                categoria: x.get("categoria"),
-                numero_treno: x.get("numero"),
-                destinazione: "todo!()".to_owned(),
-                ora_arrivo_destinazione: "todo!()".to_owned(),
-                orario: x.get("orario"),
-                ritardo: x.get("ritardo"),
-                binario: x.get("binario"),
-            })
-            .collect::<Vec<_>>(),
+        &Ctx {
+            station,
+            rows: cols
+                .iter()
+                .map(|x| CtxLine {
+                    categoria: x.get("categoria"),
+                    numero_treno: x.get("numero"),
+                    destinazione: "todo!()".to_owned(),
+                    ora_arrivo_destinazione: "todo!()".to_owned(),
+                    orario: x.get("orario"),
+                    ritardo: x.get("ritardo"),
+                    binario: x.get("binario"),
+                })
+                .collect::<Vec<_>>(),
+        },
     )
 }

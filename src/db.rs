@@ -23,7 +23,7 @@ pub fn create_db() -> Result<(), String> {
     let queries = include_str!("../queries/create_db.sql")
         .split(';')
         .map(|x| x.trim())
-        .filter(|x| x.len() > 0)
+        .filter(|x| !x.is_empty())
         .map(|x| x.replace('§', ";"));
     for query in queries {
         client
