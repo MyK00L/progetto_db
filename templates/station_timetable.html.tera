@@ -1,0 +1,24 @@
+{% extends "base" %}
+{% block title %}Stazione di {{station}}{% endblock title %}
+{% block content %}
+
+<h2>Stazione di {{station}}</h2>
+<table class="table table-striped">
+<tr>
+<th>Treno</th>
+<th>Destinazione</th>
+<th>Orario</th>
+<th>Binario</th>
+<th>Ritardo</th>
+<tr>
+{% for row in rows %}
+<tr>
+<td>{{row.categoria}} {{row.numero_treno}}</td>
+<td>{{row.destinazione}}</td>
+<td>{{row.orario}}</td>
+<td>{{row.binario}}</td>
+<td>{{row.ritardo}}</td>
+</tr>
+{% endfor %}
+</table>
+{% endblock content %}
