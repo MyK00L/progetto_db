@@ -1,0 +1,1 @@
+Il gruppo si propone di realizzare un sistema informativo per la gestione della marcia dei treni. Verranno modellate le linee (gli orari e i punti di passaggio), le singole corse (composizione del treno, passaggio attraverso i waypoints e personale di bordo)
