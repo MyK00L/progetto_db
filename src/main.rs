@@ -10,6 +10,47 @@ mod routes;
 #[database("database")]
 pub struct DbConn(Client);
 
+#[get("/train_status/<train_number>")]
+async fn train_status(train_number: i32, db: DbConn) -> Template {
+    #[derive(Debug, Serialize)]
+    struct Item {
+        name: String,
+        scheduled_arrival: chrono::NaiveDateTime,
+        arrival: Option<chrono::NaiveDateTime>,
+    }
+    #[derive(Debug, Serialize)]
+    struct Context {
+        numero: i32,
+        items: Vec<Item>,
+    }
+    let cols = db
+        .run(move |conn| {
+            conn
+        .query(
+            "SELECT orario, data, Nome FROM PdPStazione, RitardoPdP WHERE RitardoPdP.numero = $1 AND RitardoPdP.idpdp = PdPStazione.IDPdP ORDER BY orario",
+            &[&train_number],
+        ).unwrap()
+        })
+        .await;
+    let context = Context {
+        numero: train_number,
+        items: cols
+            .iter()
+            .map(|col| {
+                let orario: chrono::NaiveDateTime = col.get("orario");
+                let data: Option<chrono::NaiveDateTime> = col.get("data");
+                let nome: String = col.get("Nome");
+                Item {
+                    name: nome,
+                    scheduled_arrival: orario,
+                    arrival: data,
+                }
+            })
+            .collect(),
+    };
+    Template::render("train_status", &context)
+}
+
 #[get("/insert/<tablename>")]
 async fn insert_item(tablename: String, db: DbConn) -> Template {
     #[derive(Debug, Serialize)]
@@ -72,5 +113,8 @@ fn rocket() -> _ {
     rocket::build()
         .attach(DbConn::fairing())
         .attach(Template::fairing())
-        .mount("/", routes![insert_item, routes::station_timetable])
+        .mount(
+            "/",
+            routes![insert_item, train_status, routes::station_timetable],
+        )
 }
