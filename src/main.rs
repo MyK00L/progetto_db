@@ -12,13 +12,13 @@ pub struct DbConn(Client);
 
 #[get("/train_status/<train_number>")]
 async fn train_status(train_number: i32, db: DbConn) -> Template {
-    #[derive(Debug,Serialize)]
+    #[derive(Debug, Serialize)]
     struct Item {
         name: String,
         scheduled_arrival: chrono::NaiveDateTime,
         arrival: Option<chrono::NaiveDateTime>,
     }
-    #[derive(Debug,Serialize)]
+    #[derive(Debug, Serialize)]
     struct Context {
         numero: i32,
         items: Vec<Item>,
@@ -32,16 +32,22 @@ async fn train_status(train_number: i32, db: DbConn) -> Template {
         ).unwrap()
         })
         .await;
-    let context = Context{numero: train_number, items: cols.iter().map(|col| {
-        let orario: chrono::NaiveDateTime = col.get("orario");
-        let data: Option<chrono::NaiveDateTime> = col.get("data");
-        let nome: String = col.get("Nome");
-        Item {
-            name: nome,
-            scheduled_arrival: orario,
-            arrival: data,
-        }
-    }).collect()};
+    let context = Context {
+        numero: train_number,
+        items: cols
+            .iter()
+            .map(|col| {
+                let orario: chrono::NaiveDateTime = col.get("orario");
+                let data: Option<chrono::NaiveDateTime> = col.get("data");
+                let nome: String = col.get("Nome");
+                Item {
+                    name: nome,
+                    scheduled_arrival: orario,
+                    arrival: data,
+                }
+            })
+            .collect(),
+    };
     Template::render("train_status", &context)
 }
 
@@ -107,5 +113,8 @@ fn rocket() -> _ {
     rocket::build()
         .attach(DbConn::fairing())
         .attach(Template::fairing())
-        .mount("/", routes![insert_item, train_status, routes::station_timetable])
+        .mount(
+            "/",
+            routes![insert_item, train_status, routes::station_timetable],
+        )
 }
