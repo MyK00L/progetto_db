@@ -21,8 +21,12 @@ async fn train_status(train_number: i32, db: DbConn) -> Template {
     #[derive(Debug, Serialize)]
     struct Context {
         numero: i32,
+        categoria: String,
         items: Vec<Item>,
     }
+    let categoria = db.run(move |conn| {
+        conn.query("SELECT Categoria FROM Treno WHERE Numero = $1;", &[&train_number]).unwrap()
+    }).await.iter().map(|col| col.get("Categoria")).next().unwrap();
     let cols = db
         .run(move |conn| {
             conn
@@ -34,6 +38,7 @@ async fn train_status(train_number: i32, db: DbConn) -> Template {
         .await;
     let context = Context {
         numero: train_number,
+        categoria,
         items: cols
             .iter()
             .map(|col| {
