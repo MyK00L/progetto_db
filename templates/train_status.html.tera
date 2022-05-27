@@ -2,13 +2,27 @@
 {% block title %}Stato treno {{categoria}} {{numero}}{% endblock title %}
 {% block content %}
 
-<h2>Stato treno {{categoria}} {{numero}}</h2>
+<h2>Stato treno {{categoria}} {{numero}} da {{ items | map(attribute="name") | first }} a {{ items | map(attribute="name") | last }}</h2>
 <main>
+<p><em>Ultimo rilevamento:</em>  </p>
+<p><em>Ritardo:</em> </p>
 {% for item in items %}
-<h3>{{item.name}}</h3>
-<p>Arrivo programmato: {{item.scheduled_arrival}}</p>
-<p>Arrivo effettivo: {{item.arrival}}</p>
+<section>
+    <h3>{{item.name}}</h3>
+    <p><em>Arrivo programmato:</em>  {{item.scheduled_arrival}}</p>
+    <p><em>Arrivo effettivo:</em>  {{item.arrival}}</p>
+</section>
 {% endfor %}
 </main>
+
+<style>
+section{
+    border-bottom: 1px solid #333;
+    margin-bottom: 1em;
+}
+em{
+    font-weight: bold;
+}
+</style>
 
 {% endblock content %}
