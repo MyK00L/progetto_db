@@ -29,7 +29,7 @@ async fn train_status(train_number: i32, db: DbConn) -> Template {
     }
     let (ultimo_pdp_nome, ultimo_pdp_orario, ritardo) = db
         .run(move |conn| {
-            conn.query("SELECT rpdp.ritardo AS r, rpdp.data AS orario, pdps.nome FROM RitardoPdP rpdp LEFT JOIN PdPStazione pdps on rpdp.idpdp = pdps.idpdp WHERE rpdp.numero = $1 ORDER BY orario DESC LIMIT 1;", &[&train_number])
+            conn.query("SELECT rpdp.ritardo AS r, rpdp.data AS orario, pdps.nome FROM RitardoPdP rpdp LEFT JOIN PdPStazione pdps on rpdp.idpdp = pdps.idpdp WHERE rpdp.numero = $1 ORDER BY orario DESC;", &[&train_number])
                 .unwrap()
         })
         .await.iter().map(|x| (x.get("nome"),
@@ -39,7 +39,7 @@ async fn train_status(train_number: i32, db: DbConn) -> Template {
         }, {
             let a: f64 = x.get("r");
             a
-        } as i16)).map(|(n, o, r)| (if o.is_none(){None}else{n}, o, r)).next().unwrap_or_default();
+        } as i16)).filter(|x| (x.1).is_some()).next().unwrap_or_default();
 
     let categoria = db
         .run(move |conn| {
