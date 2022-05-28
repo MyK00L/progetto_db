@@ -64,13 +64,30 @@ async fn insert_item(tablename: String, db: DbConn) -> Template {
         name: String,
         cols: Vec<Column>,
     }
-    let cacca = tablename.clone();
+    let tname0 = tablename.clone();
+    let table_type: String = db
+        .run(move |conn| {
+            conn.query(
+                "SELECT table_type FROM information_schema.tables WHERE table_name like $1",
+                &[&(tname0)],
+            )
+            .unwrap()
+        })
+        .await
+        .get(0)
+        .map(|x| x.get("table_type"))
+        .unwrap_or_else(|| String::from("N"));
+    eprintln!("{}", table_type);
+    if table_type != "BASE TABLE" {
+        return Template::render("insert_item", ());
+    }
+    let tname1 = tablename.clone();
     let cols = db
         .run(move |conn| {
             conn
         .query(
             "SELECT column_name, data_type FROM information_schema.columns WHERE table_name like $1",
-            &[&cacca],
+            &[&tname1],
         ).unwrap()
         })
         .await;
