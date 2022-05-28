@@ -11,6 +11,7 @@
 		<input {% if col.is_required %} required {% endif %} type="{{col.type}}" class="form-control" id="{{col.name}}" name="{{col.name}}" placeholder="{{col.name}}" />
   </div>
 	{% endfor %}
+	<input type="submit" value="Submit" />
 </form>
 
 {% endblock content %}
