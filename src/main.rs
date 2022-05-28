@@ -79,7 +79,7 @@ async fn insert_item(tablename: String, db: DbConn) -> Template {
         .unwrap_or_else(|| String::from("N"));
     eprintln!("{}", table_type);
     if table_type != "BASE TABLE" {
-        return Template::render("insert_item", ());
+        return Template::render("insert_item", ()); // TODO: proper error
     }
     let tname1 = tablename.clone();
     let cols = db
