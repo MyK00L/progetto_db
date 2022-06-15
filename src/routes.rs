@@ -1,5 +1,8 @@
+use rocket::form::Form;
+use rocket::form::Strict;
 use rocket_dyn_templates::Template;
 use serde::Serialize;
+use std::collections::HashMap;
 
 #[get("/stazione/<name>")]
 pub async fn station_timetable(name: String, db: crate::DbConn) -> Template {
@@ -47,4 +50,131 @@ pub async fn station_timetable(name: String, db: crate::DbConn) -> Template {
                 .collect::<Vec<_>>(),
         },
     )
+}
+
+#[get("/train_status/<train_number>")]
+pub async fn train_status(train_number: i32, db: crate::DbConn) -> Template {
+    #[derive(Debug, Serialize)]
+    struct Item {
+        name: String,
+        scheduled_arrival: chrono::NaiveDateTime,
+        arrival: Option<chrono::NaiveDateTime>,
+    }
+    #[derive(Debug, Serialize)]
+    struct Context {
+        numero: i32,
+        items: Vec<Item>,
+    }
+    let cols = db
+        .run(move |conn| {
+            conn
+        .query(
+            "SELECT orario, data, Nome FROM PdPStazione, RitardoPdP WHERE RitardoPdP.numero = $1 AND RitardoPdP.idpdp = PdPStazione.IDPdP ORDER BY orario",
+            &[&train_number],
+        ).unwrap()
+        })
+        .await;
+    let context = Context {
+        numero: train_number,
+        items: cols
+            .iter()
+            .map(|col| {
+                let orario: chrono::NaiveDateTime = col.get("orario");
+                let data: Option<chrono::NaiveDateTime> = col.get("data");
+                let nome: String = col.get("Nome");
+                Item {
+                    name: nome,
+                    scheduled_arrival: orario,
+                    arrival: data,
+                }
+            })
+            .collect(),
+    };
+    Template::render("train_status", &context)
+}
+
+#[get("/insert/<tablename>")]
+pub async fn insert_item(tablename: String, db: crate::DbConn) -> Option<Template> {
+    #[derive(Debug, Serialize)]
+    struct Column {
+        name: String,
+        r#type: String,
+        is_required: bool,
+    }
+    #[derive(Debug, Serialize)]
+    struct Table {
+        name: String,
+        cols: Vec<Column>,
+    }
+    let tname0 = tablename.clone();
+    let table_type: String = db
+        .run(move |conn| {
+            conn.query(
+                "SELECT table_type FROM information_schema.tables WHERE table_name like $1",
+                &[&(tname0)],
+            )
+            .unwrap()
+        })
+        .await
+        .get(0)
+        .map(|x| x.get("table_type"))
+        .unwrap_or_else(|| String::from("N"));
+    eprintln!("{}", table_type);
+    if table_type != "BASE TABLE" {
+        return None; // TODO: proper error
+    }
+    let tname1 = tablename.clone();
+    let cols = db
+        .run(move |conn| {
+            conn
+        .query(
+            "SELECT column_name, data_type FROM information_schema.columns WHERE table_name like $1",
+            &[&tname1],
+        ).unwrap()
+        })
+        .await;
+    let context = Table {
+        name: tablename,
+        cols: cols
+            .iter()
+            .map(|col| {
+                let column_name: String = col.get("column_name");
+                let column_type: String = col.get("data_type");
+                let is_nullable: String = "YES".to_owned(); //col.get("is_nullable");
+                Column {
+                    name: column_name,
+                    r#type: column_type, // not
+                    is_required: is_nullable == "NO",
+                }
+            })
+            .collect(),
+    };
+    eprintln!("{:?}", context);
+    Some(Template::render("insert_item", &context))
+}
+
+#[derive(FromForm, Debug)]
+pub struct InsertItem {
+    table: String,
+    columns: HashMap<String, String>,
+}
+#[post("/api/insert", data = "<stuff>")]
+pub async fn insert_api(stuff: Form<Strict<InsertItem>>, db: crate::DbConn) -> String {
+    let cols = stuff
+        .columns
+        .iter()
+        .map(|x| x.0.clone())
+        .collect::<Vec<String>>()
+        .join(", ");
+    let vals = stuff
+        .columns
+        .iter()
+        .map(|x| format!("'{}'", x.1))
+        .collect::<Vec<String>>()
+        .join(", ");
+    let query = format!("insert into {} ({}) values ({});", stuff.table, cols, vals);
+    eprintln!("{}", query);
+    let ans = db.run(move |conn| conn.query(&query, &[]).unwrap()).await;
+    eprintln!("{:?}", ans);
+    String::from("halp")
 }
