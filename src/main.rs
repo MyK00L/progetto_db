@@ -121,25 +121,22 @@ struct InsertItem {
 }
 #[post("/api/insert", data = "<stuff>")]
 async fn insert_api(stuff: Form<Strict<InsertItem>>, db: DbConn) -> String {
-    let mut args = vec![&stuff.table];
-    args.extend(stuff.columns.iter().map(|x| x.0));
-    args.extend(stuff.columns.iter().map(|x| x.1));
-    let mut query = String::from("insert into $1 (");
-    let coln = stuff.columns.len();
-    for i in 0..coln {
-        query += &format!("${}, ", i + 2);
-    }
-    query += ") values (";
-    for i in 0..coln {
-        query += &format!("${}, ", i + 2 + coln);
-    }
-    query += ");";
-    /*
-    let ans = db
-        .run(move |conn| conn.query(&query, &args[..]).unwrap())
-        .await;
+    let cols = stuff
+        .columns
+        .iter()
+        .map(|x| x.0.clone())
+        .collect::<Vec<String>>()
+        .join(", ");
+    let vals = stuff
+        .columns
+        .iter()
+        .map(|x| format!("'{}'", x.1))
+        .collect::<Vec<String>>()
+        .join(", ");
+    let query = format!("insert into {} ({}) values ({});", stuff.table, cols, vals);
+    eprintln!("{}", query);
+    let ans = db.run(move |conn| conn.query(&query, &[]).unwrap()).await;
     eprintln!("{:?}", ans);
-    */
     String::from("halp")
 }
 
