@@ -55,7 +55,7 @@ async fn train_status(train_number: i32, db: DbConn) -> Template {
 }
 
 #[get("/insert/<tablename>")]
-async fn insert_item(tablename: String, db: DbConn) -> Template {
+async fn insert_item(tablename: String, db: DbConn) -> Option<Template> {
     #[derive(Debug, Serialize)]
     struct Column {
         name: String,
@@ -82,7 +82,7 @@ async fn insert_item(tablename: String, db: DbConn) -> Template {
         .unwrap_or_else(|| String::from("N"));
     eprintln!("{}", table_type);
     if table_type != "BASE TABLE" {
-        return Template::render("insert_item", ()); // TODO: proper error
+        return None; // TODO: proper error
     }
     let tname1 = tablename.clone();
     let cols = db
@@ -111,7 +111,7 @@ async fn insert_item(tablename: String, db: DbConn) -> Template {
             .collect(),
     };
     eprintln!("{:?}", context);
-    Template::render("insert_item", &context)
+    Some(Template::render("insert_item", &context))
 }
 
 #[derive(FromForm, Debug)]
@@ -121,7 +121,7 @@ struct InsertItem {
 }
 #[post("/api/insert", data = "<stuff>")]
 async fn insert_api(stuff: Form<Strict<InsertItem>>, db: DbConn) -> String {
-    let args = vec![&stuff.table];
+    let mut args = vec![&stuff.table];
     args.extend(stuff.columns.iter().map(|x| x.0));
     args.extend(stuff.columns.iter().map(|x| x.1));
     let mut query = String::from("insert into $1 (");
@@ -134,10 +134,12 @@ async fn insert_api(stuff: Form<Strict<InsertItem>>, db: DbConn) -> String {
         query += &format!("${}, ", i + 2 + coln);
     }
     query += ");";
+    /*
     let ans = db
         .run(move |conn| conn.query(&query, &args[..]).unwrap())
         .await;
     eprintln!("{:?}", ans);
+    */
     String::from("halp")
 }
 
