@@ -7,11 +7,11 @@
 	<input required type="hidden" name="table" value="{{name}}" />
 	{% for col in cols %}
 	<div class="form-group">
-		<label for="{{col.name}}">{{col.name}}</label>
-		<input {% if col.is_required %} required {% endif %} type="{{col.type}}" class="form-control" id="{{col.name}}" name="{{col.name}}" placeholder="{{col.name}}" />
+		<label for="columns.{{col.name}}">{{col.name}}</label>
+		<input {% if col.is_required %} required {% endif %} type="{{col.type}}" class="form-control" id="columns.{{col.name}}" name="columns.{{col.name}}" placeholder="{{col.name}}" />
   </div>
 	{% endfor %}
-	<button type="submit" class="btn btn-default">Inserisci</button>
+	<button type="submit" class="btn btn-primary">Inserisci</button>
 </form>
 
 {% endblock content %}

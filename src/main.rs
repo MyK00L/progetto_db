@@ -1,9 +1,12 @@
 #[macro_use]
 extern crate rocket;
+use rocket::form::Form;
+use rocket::form::Strict;
 use rocket_dyn_templates::Template;
 use rocket_sync_db_pools::database;
 use rocket_sync_db_pools::postgres::Client;
 use serde::Serialize;
+use std::collections::HashMap;
 mod db;
 mod routes;
 
@@ -111,6 +114,33 @@ async fn insert_item(tablename: String, db: DbConn) -> Template {
     Template::render("insert_item", &context)
 }
 
+#[derive(FromForm, Debug)]
+struct InsertItem {
+    table: String,
+    columns: HashMap<String, String>,
+}
+#[post("/api/insert", data = "<stuff>")]
+async fn insert_api(stuff: Form<Strict<InsertItem>>, db: DbConn) -> String {
+    let args = vec![&stuff.table];
+    args.extend(stuff.columns.iter().map(|x| x.0));
+    args.extend(stuff.columns.iter().map(|x| x.1));
+    let mut query = String::from("insert into $1 (");
+    let coln = stuff.columns.len();
+    for i in 0..coln {
+        query += &format!("${}, ", i + 2);
+    }
+    query += ") values (";
+    for i in 0..coln {
+        query += &format!("${}, ", i + 2 + coln);
+    }
+    query += ");";
+    let ans = db
+        .run(move |conn| conn.query(&query, &args[..]).unwrap())
+        .await;
+    eprintln!("{:?}", ans);
+    String::from("halp")
+}
+
 #[launch]
 fn rocket() -> _ {
     dotenv::dotenv().ok();
@@ -132,6 +162,11 @@ fn rocket() -> _ {
         .attach(Template::fairing())
         .mount(
             "/",
-            routes![insert_item, train_status, routes::station_timetable],
+            routes![
+                insert_item,
+                insert_api,
+                train_status,
+                routes::station_timetable
+            ],
         )
 }
