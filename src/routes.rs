@@ -63,8 +63,39 @@ pub async fn train_status(train_number: i32, db: crate::DbConn) -> Template {
     #[derive(Debug, Serialize)]
     struct Context {
         numero: i32,
+        categoria: String,
+        ultimo_pdp_nome: Option<String>,
+        ritardo: i16,
+        ultimo_pdp_orario: Option<chrono::NaiveDateTime>,
         items: Vec<Item>,
     }
+    let (ultimo_pdp_nome, ultimo_pdp_orario, ritardo) = db
+        .run(move |conn| {
+            conn.query("SELECT rpdp.ritardo AS r, rpdp.data AS orario, pdps.nome FROM RitardoPdP rpdp LEFT JOIN PdPStazione pdps on rpdp.idpdp = pdps.idpdp WHERE rpdp.numero = $1 ORDER BY orario DESC;", &[&train_number])
+                .unwrap()
+        })
+        .await.iter().map(|x| (x.get("nome"),
+        {
+            let y: Option<chrono::NaiveDateTime> = x.get("orario");
+            y
+        }, {
+            let a: f64 = x.get("r");
+            a
+        } as i16)).find(|x| (x.1).is_some()).unwrap_or_default();
+
+    let categoria = db
+        .run(move |conn| {
+            conn.query(
+                "SELECT Categoria FROM Treno WHERE Numero = $1;",
+                &[&train_number],
+            )
+            .unwrap()
+        })
+        .await
+        .iter()
+        .map(|col| col.get("Categoria"))
+        .next()
+        .unwrap();
     let cols = db
         .run(move |conn| {
             conn
@@ -76,6 +107,10 @@ pub async fn train_status(train_number: i32, db: crate::DbConn) -> Template {
         .await;
     let context = Context {
         numero: train_number,
+        categoria,
+        ultimo_pdp_nome,
+        ultimo_pdp_orario,
+        ritardo,
         items: cols
             .iter()
             .map(|col| {
