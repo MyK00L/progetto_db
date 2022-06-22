@@ -1,9 +1,12 @@
 #[macro_use]
 extern crate rocket;
+use rocket::form::Form;
+use rocket::form::Strict;
 use rocket_dyn_templates::Template;
 use rocket_sync_db_pools::database;
 use rocket_sync_db_pools::postgres::Client;
 use serde::Serialize;
+use std::collections::HashMap;
 mod db;
 mod routes;
 
@@ -87,7 +90,7 @@ async fn train_status(train_number: i32, db: DbConn) -> Template {
 }
 
 #[get("/insert/<tablename>")]
-async fn insert_item(tablename: String, db: DbConn) -> Template {
+async fn insert_item(tablename: String, db: DbConn) -> Option<Template> {
     #[derive(Debug, Serialize)]
     struct Column {
         name: String,
@@ -99,13 +102,30 @@ async fn insert_item(tablename: String, db: DbConn) -> Template {
         name: String,
         cols: Vec<Column>,
     }
-    let cacca = tablename.clone();
+    let tname0 = tablename.clone();
+    let table_type: String = db
+        .run(move |conn| {
+            conn.query(
+                "SELECT table_type FROM information_schema.tables WHERE table_name like $1",
+                &[&(tname0)],
+            )
+            .unwrap()
+        })
+        .await
+        .get(0)
+        .map(|x| x.get("table_type"))
+        .unwrap_or_else(|| String::from("N"));
+    eprintln!("{}", table_type);
+    if table_type != "BASE TABLE" {
+        return None; // TODO: proper error
+    }
+    let tname1 = tablename.clone();
     let cols = db
         .run(move |conn| {
             conn
         .query(
             "SELECT column_name, data_type FROM information_schema.columns WHERE table_name like $1",
-            &[&cacca],
+            &[&tname1],
         ).unwrap()
         })
         .await;
@@ -126,7 +146,33 @@ async fn insert_item(tablename: String, db: DbConn) -> Template {
             .collect(),
     };
     eprintln!("{:?}", context);
-    Template::render("insert_item", &context)
+    Some(Template::render("insert_item", &context))
+}
+
+#[derive(FromForm, Debug)]
+struct InsertItem {
+    table: String,
+    columns: HashMap<String, String>,
+}
+#[post("/api/insert", data = "<stuff>")]
+async fn insert_api(stuff: Form<Strict<InsertItem>>, db: DbConn) -> String {
+    let cols = stuff
+        .columns
+        .iter()
+        .map(|x| x.0.clone())
+        .collect::<Vec<String>>()
+        .join(", ");
+    let vals = stuff
+        .columns
+        .iter()
+        .map(|x| format!("'{}'", x.1))
+        .collect::<Vec<String>>()
+        .join(", ");
+    let query = format!("insert into {} ({}) values ({});", stuff.table, cols, vals);
+    eprintln!("{}", query);
+    let ans = db.run(move |conn| conn.query(&query, &[]).unwrap()).await;
+    eprintln!("{:?}", ans);
+    String::from("halp")
 }
 
 #[launch]
@@ -150,6 +196,11 @@ fn rocket() -> _ {
         .attach(Template::fairing())
         .mount(
             "/",
-            routes![insert_item, train_status, routes::station_timetable],
+            routes![
+                insert_item,
+                insert_api,
+                train_status,
+                routes::station_timetable
+            ],
         )
 }
