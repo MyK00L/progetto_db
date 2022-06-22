@@ -39,7 +39,7 @@ async fn train_status(train_number: i32, db: DbConn) -> Template {
         }, {
             let a: f64 = x.get("r");
             a
-        } as i16)).filter(|x| (x.1).is_some()).next().unwrap_or_default();
+        } as i16)).find(|x| (x.1).is_some()).unwrap_or_default();
 
     let categoria = db
         .run(move |conn| {
