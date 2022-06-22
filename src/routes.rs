@@ -3,6 +3,7 @@ use rocket::form::Strict;
 use rocket_dyn_templates::Template;
 use serde::Serialize;
 use std::collections::HashMap;
+use regex::Regex;
 
 #[get("/stazione/<name>")]
 pub async fn station_timetable(name: String, db: crate::DbConn) -> Template {
@@ -154,7 +155,6 @@ pub async fn insert_item(tablename: String, db: crate::DbConn) -> Option<Templat
         .get(0)
         .map(|x| x.get("table_type"))
         .unwrap_or_else(|| String::from("N"));
-    eprintln!("{}", table_type);
     if table_type != "BASE TABLE" {
         return None; // TODO: proper error
     }
@@ -168,6 +168,23 @@ pub async fn insert_item(tablename: String, db: crate::DbConn) -> Option<Templat
         ).unwrap()
         })
         .await;
+    let tname2 = tablename.clone();
+    let fks = db
+        .run(move |conn| {
+            conn
+        .query(
+            &format!("SELECT pg_catalog.pg_get_constraintdef(r.oid, true) as condef FROM pg_catalog.pg_constraint r WHERE r.conrelid = '{}'::regclass AND r.contype = 'f' ORDER BY 1;",tname2),
+            &[],
+        ).unwrap()
+        })
+        .await;
+
+    let re = Regex::new(r"/FOREIGN KEY \((\w+)\) REFERENCES (\w+)\((\w+)\)/gm").unwrap();
+    for i in fks.iter() {
+        let text: String = i.get(0);
+        let cap = re.captures(&text).unwrap();
+        eprintln!("{:?}",cap);
+    }
     let context = Table {
         name: tablename,
         cols: cols
