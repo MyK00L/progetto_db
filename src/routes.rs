@@ -1,28 +1,28 @@
 use rocket::form::Form;
- use rocket::form::Strict;
- use rocket_dyn_templates::Template;
- use serde::Serialize;
- use std::collections::HashMap;
+use rocket::form::Strict;
+use rocket_dyn_templates::Template;
+use serde::Serialize;
+use std::collections::HashMap;
 
- #[get("/stazione/<name>")]
- pub async fn station_timetable(name: String, db: crate::DbConn) -> Template {
-     #[derive(Serialize)]
-     struct Ctx {
-         rows: Vec<CtxLine>,
-         station: String,
-     }
-     #[derive(Serialize)]
-     struct CtxLine {
-         categoria: String,
-         numero_treno: i32,
-         destinazione: String,
-         ora_arrivo_destinazione: String,
-         orario: chrono::NaiveDateTime,
-         ritardo: f64,
-         binario: String,
-     }
-     let station = name.clone();
-     let cols = db
+#[get("/stazione/<name>")]
+pub async fn station_timetable(name: String, db: crate::DbConn) -> Template {
+    #[derive(Serialize)]
+    struct Ctx {
+        rows: Vec<CtxLine>,
+        station: String,
+    }
+    #[derive(Serialize)]
+    struct CtxLine {
+        categoria: String,
+        numero_treno: i32,
+        destinazione: String,
+        ora_arrivo_destinazione: String,
+        orario: chrono::NaiveDateTime,
+        ritardo: f64,
+        binario: String,
+    }
+    let station = name.clone();
+    let cols = db
          .run(move |conn| {
              conn
          .query(
@@ -32,27 +32,27 @@ use rocket::form::Form;
          .unwrap()
          })
          .await;
-     Template::render(
-         "station_timetable",
-         &Ctx {
-             station,
-             rows: cols
-                 .iter()
-                 .map(|x| CtxLine {
-                     categoria: x.get("categoria"),
-                     numero_treno: x.get("numero"),
-                     destinazione: x.get("destinazione"),
-                     ora_arrivo_destinazione: "todo!()".to_owned(),
-                     orario: x.get("orario"),
-                     ritardo: x.get("ritardo"),
-                     binario: x.get("binario"),
-                 })
-                 .collect::<Vec<_>>(),
-         },
-     )
- }
- 
- #[get("/train_status/<train_number>")]
+    Template::render(
+        "station_timetable",
+        &Ctx {
+            station,
+            rows: cols
+                .iter()
+                .map(|x| CtxLine {
+                    categoria: x.get("categoria"),
+                    numero_treno: x.get("numero"),
+                    destinazione: x.get("destinazione"),
+                    ora_arrivo_destinazione: "todo!()".to_owned(),
+                    orario: x.get("orario"),
+                    ritardo: x.get("ritardo"),
+                    binario: x.get("binario"),
+                })
+                .collect::<Vec<_>>(),
+        },
+    )
+}
+
+#[get("/train_status/<train_number>")]
 pub async fn train_status(train_number: i32, db: crate::DbConn) -> Template {
     #[derive(Debug, Serialize)]
     struct Item {
