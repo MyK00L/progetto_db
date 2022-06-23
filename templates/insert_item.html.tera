@@ -8,7 +8,7 @@
 	{% for col in cols %}
 	<div class="form-group">
 		<label for="columns.{{col.name}}">{{col.name}}</label>
-		<input {% if col.is_required %} required {% endif %} type="{{col.type}}" class="form-control" id="columns.{{col.name}}" name="columns.{{col.name}}" placeholder="{{col.name}}" />
+		<input {% if col.is_required %} required {% endif %} type="{{col.type}}" class="form-control" id="columns.{{col.name}}" name="columns.{{col.name}}"/>
   </div>
 	{% endfor %}
 	<button type="submit" class="btn btn-primary">Inserisci</button>
