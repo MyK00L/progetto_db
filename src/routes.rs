@@ -213,3 +213,75 @@ pub async fn insert_api(stuff: Form<Strict<InsertItem>>, db: crate::DbConn) -> S
     eprintln!("{:?}", ans);
     String::from("halp")
 }
+
+#[get("/list/<tablename>?<q>")]
+pub async fn list_table(
+    tablename: String,
+    q: Option<String>,
+    db: crate::DbConn,
+) -> Option<Template> {
+    #[derive(Debug, Serialize)]
+    struct Column {
+        name: String,
+    }
+    #[derive(Debug, Serialize)]
+    struct Table {
+        name: String,
+        cols: Vec<Column>,
+        data: Vec<Vec<String>>,
+    }
+
+    let tname0 = tablename.clone();
+    let table_type: String = db
+        .run(move |conn| {
+            conn.query(
+                "SELECT table_type FROM information_schema.tables WHERE table_name like $1",
+                &[&(tname0)],
+            )
+            .unwrap()
+        })
+        .await
+        .get(0)
+        .map(|x| x.get("table_type"))
+        .unwrap_or_else(|| String::from("N"));
+    eprintln!("{}", table_type);
+    if table_type != "BASE TABLE" {
+        return None; // TODO: proper error
+    }
+    let tname1 = tablename.clone();
+    let tname2 = tablename.clone();
+    let cols: Vec<Column> = db
+        .run(move |conn| {
+            conn.query(
+                "SELECT column_name FROM information_schema.columns WHERE table_name like $1",
+                &[&tname1],
+            )
+            .unwrap()
+        })
+        .await
+        .iter()
+        .map(|col| {
+            let column_name: String = col.get("column_name");
+            Column { name: column_name }
+        })
+        .collect();
+
+    let data = db
+        .run(move |conn| {
+            conn.query(&format!("SELECT * FROM {}", tname2), &[])
+                .unwrap()
+        })
+        .await
+        .iter()
+        // FIXME This doesn't work because everything is **casted** to a string
+        .map(|x| cols.iter().map(|y| x.get(y.name.as_str())).collect())
+        .collect();
+
+    let context = Table {
+        name: tablename,
+        cols,
+        data,
+    };
+    eprintln!("{:?}", context);
+    Some(Template::render("list", &dbg!(context)))
+}
