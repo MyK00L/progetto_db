@@ -1,9 +1,9 @@
+use regex::Regex;
 use rocket::form::Form;
 use rocket::form::Strict;
 use rocket_dyn_templates::Template;
 use serde::Serialize;
 use std::collections::HashMap;
-use regex::Regex;
 
 #[get("/stazione/<name>")]
 pub async fn station_timetable(name: String, db: crate::DbConn) -> Template {
@@ -179,11 +179,17 @@ pub async fn insert_item(tablename: String, db: crate::DbConn) -> Option<Templat
         })
         .await;
 
-    let re = Regex::new(r"/FOREIGN KEY \((\w+)\) REFERENCES (\w+)\((\w+)\)/gm").unwrap();
+    let re = Regex::new(r"^FOREIGN KEY \((\w+)\) REFERENCES (\w+)\((\w+)\)$").unwrap();
     for i in fks.iter() {
         let text: String = i.get(0);
         let cap = re.captures(&text).unwrap();
-        eprintln!("{:?}",cap);
+        let col = String::from(&cap[1]);
+        let table = String::from(&cap[2]);
+        let id = String::from(&cap[3]);
+        let shit: Vec<String> = db
+            .run(move |conn| conn.query(&format!("SELECT {} FROM {};",id,table), &[]).unwrap())
+            .await.iter().map(|x| x.get(0)).collect();
+        eprintln!("{:?}",shit);
     }
     let context = Table {
         name: tablename,
