@@ -4,19 +4,19 @@ pub fn get_sql<I>(row: &postgres::row::Row, idx: I) -> String
 where
     I: postgres::row::RowIndex + Display,
 {
-    if let Ok(x) = row.try_get::<_, String>(idx) {
+    if let Ok(x) = row.try_get::<_, String>(&idx) {
         return x;
     }
-    if let Ok(x) = row.try_get::<_, i32>(idx) {
+    if let Ok(x) = row.try_get::<_, i32>(&idx) {
         return format!("{}", x);
     }
-    if let Ok(x) = row.try_get::<_, f32>(idx) {
+    if let Ok(x) = row.try_get::<_, f32>(&idx) {
         return format!("{}", x);
     }
-    if let Ok(x) = row.try_get::<_, bool>(idx) {
+    if let Ok(x) = row.try_get::<_, bool>(&idx) {
         return match x {
-            true => "V",
-            false => "F",
+            true => "1",
+            false => "0",
         }
         .to_string();
     }
