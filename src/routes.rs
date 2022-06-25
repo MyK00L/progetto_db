@@ -223,6 +223,7 @@ pub async fn list_table(
     #[derive(Debug, Serialize)]
     struct Column {
         name: String,
+        sql_type: String,
     }
     #[derive(Debug, Serialize)]
     struct Table {
@@ -253,7 +254,7 @@ pub async fn list_table(
     let cols: Vec<Column> = db
         .run(move |conn| {
             conn.query(
-                "SELECT column_name FROM information_schema.columns WHERE table_name like $1",
+                "SELECT column_name, data_type FROM information_schema.columns WHERE table_name like $1",
                 &[&tname1],
             )
             .unwrap()
@@ -262,7 +263,7 @@ pub async fn list_table(
         .iter()
         .map(|col| {
             let column_name: String = col.get("column_name");
-            Column { name: column_name }
+            Column {name:column_name, sql_type: col.get("data_type") }
         })
         .collect();
 
@@ -274,7 +275,11 @@ pub async fn list_table(
         .await
         .iter()
         // FIXME This doesn't work because everything is **casted** to a string
-        .map(|x| cols.iter().map(|y| x.get(y.name.as_str())).collect())
+        .map(|x| {
+            cols.iter()
+                .map(|y| crate::utils::get_sql(&x, y.name.as_str(), y.sql_type.as_str()))
+                .collect()
+        })
         .collect();
 
     let context = Table {

@@ -5,7 +5,7 @@ where
     I: postgres::row::RowIndex + Display,
 {
     match sql_type {
-        "BOOL" => {
+        "bool" => {
             let x: bool = row.get(idx);
             match x {
                 true => "V",
@@ -13,15 +13,19 @@ where
             }
             .to_string()
         }
-        "INT" => {
+        "integer" | "INT" => {
             let x: i32 = row.get(idx);
             format!("{}", x)
         }
-        "REAL" => {
+        "real" => {
             let x: f32 = row.get(idx);
             format!("{}", x)
         }
-        "TEXT" => row.get(idx),
-        _ => panic!(), //Default::default(),
+        "time without time zone" => {
+            let x: chrono::NaiveTime = row.get(idx);
+            x.format("%H:%M").to_string()
+        }
+        "text" => row.get(idx),
+        _ => panic!("{}, {}", idx, sql_type), //Default::default(),
     }
 }
