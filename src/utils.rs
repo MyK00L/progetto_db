@@ -13,6 +13,15 @@ where
     if let Ok(x) = row.try_get::<_, f32>(&idx) {
         return format!("{}", x);
     }
+    if let Ok(x) = row.try_get::<_, chrono::NaiveTime>(&idx) {
+        return x.format("%H:%M").to_string();
+    }
+    if let Ok(x) = row.try_get::<_, chrono::NaiveDate>(&idx) {
+        return x.format("%d/%M/%Y").to_string();
+    }
+    if let Ok(x) = row.try_get::<_, chrono::NaiveDateTime>(&idx) {
+        return x.format("%d/%M/%Y %H:%M").to_string();
+    }
     if let Ok(x) = row.try_get::<_, bool>(&idx) {
         return match x {
             true => "1",
@@ -20,5 +29,5 @@ where
         }
         .to_string();
     }
-    panic!();
+    panic!("Failed to convert `{}` to string", idx);
 }

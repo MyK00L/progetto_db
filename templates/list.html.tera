@@ -1,0 +1,33 @@
+{% extends "base" %}
+{% block title %}{{name}}{% endblock title %}
+{% block content %}
+
+<h2>Lista {{name}}</h2>
+
+<table class="table table-striped">
+    <tr>
+        {% for col in cols %}
+        <th>
+            <form method="GET" class="form-inline">
+                <label for="search_{{col.name}}">{{col.name}}</label>
+                <div class="input-group mb-2 mr-sm-2">
+                    <input type="hidden" name="c" value="{{col.name}}">
+                    <input type="text" name="q" class="form-control" id="search_{{col.name}}">
+                    <div class="input-group-text p-0">
+                        <button type="submit" class="btn btn-outline-success btn-sm">Cerca</button>
+                    </div>
+                </div>
+            </form>
+        </th>
+        {% endfor %}
+    <tr>
+        {% for row in data %}
+    <tr>
+        {% for cell in row %}
+        <td>{{cell}}</td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock content %}

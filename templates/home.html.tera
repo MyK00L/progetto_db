@@ -36,7 +36,27 @@
                     <option value="esercizio">Esercizio</option>
                 </select>
             </p>
-            <a target="_blank" id="inserici" href="/insert/" class="btn btn-primary">Cerca</a>
+            <a target="_blank" id="inserici" href="/insert/" class="btn btn-primary">Inserisci</a>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Mostra</h5>
+            <p class="card-text">
+                <select onchange="fill_path('list', this)">
+                    <option></option>
+                    <option value="puntodipassaggio">Punto di passaggio</option>
+                    <option value="attraversamentoteorico">Attraversamento teorico</option>
+                    <option value="attraversamento">Attraversamento</option>
+                    <option value="pdpstazione">Stazione</option>
+                    <option value="turno">Turno</option>
+                    <option value="persona">Persona</option>
+                    <option value="locomotiva">Locomotiva</option>
+                    <option value="carrozza">Carrozza</option>
+                    <option value="esercizio">Esercizio</option>
+                </select>
+            </p>
+            <a target="_blank" id="list" href="/list/" class="btn btn-primary">Mostra</a>
         </div>
     </div>
 </div>
