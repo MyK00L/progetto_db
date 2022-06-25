@@ -188,7 +188,7 @@ pub async fn insert_item(tablename: String, db: crate::DbConn) -> Option<Templat
         let id = String::from(&cap[3]);
         let shit: Vec<String> = db
             .run(move |conn| conn.query(&format!("SELECT {} FROM {};",id,table), &[]).unwrap())
-            .await.iter().map(|x| x.get(0)).collect();
+            .await.iter().map(|x| utils::get_sql(x,0, x.get(0).into()).collect();
         eprintln!("{:?}",shit);
     }
     let context = Table {
