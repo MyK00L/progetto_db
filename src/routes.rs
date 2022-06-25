@@ -279,7 +279,6 @@ pub async fn list_table(
         .get(0)
         .map(|x| x.get("table_type"))
         .unwrap_or_else(|| String::from("N"));
-    eprintln!("{}", table_type);
     if table_type != "BASE TABLE" {
         return None; // TODO: proper error
     }
@@ -319,7 +318,6 @@ pub async fn list_table(
         })
         .await
         .iter()
-        // FIXME This doesn't work because everything is **casted** to a string
         .map(|x| {
             cols.iter()
                 .map(|y| crate::utils::get_sql(x, y.name.as_str()))
@@ -332,7 +330,6 @@ pub async fn list_table(
         cols,
         data,
     };
-    eprintln!("{:?}", context);
     Some(Template::render("list", context))
 }
 

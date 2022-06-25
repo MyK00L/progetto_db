@@ -29,5 +29,5 @@ where
         }
         .to_string();
     }
-    panic!("{}", idx);
+    panic!("Failed to convert `{}` to string", idx);
 }
