@@ -1,3 +1,5 @@
+use crate::utils;
+use regex::Regex;
 use rocket::form::Form;
 use rocket::form::Strict;
 use rocket_dyn_templates::Template;
@@ -168,6 +170,35 @@ pub async fn insert_item(tablename: String, db: crate::DbConn) -> Option<Templat
         ).unwrap()
         })
         .await;
+    let tname2 = tablename.clone();
+    let fks = db
+        .run(move |conn| {
+            conn
+        .query(
+            &format!("SELECT pg_catalog.pg_get_constraintdef(r.oid, true) as condef FROM pg_catalog.pg_constraint r WHERE r.conrelid = '{}'::regclass AND r.contype = 'f' ORDER BY 1;",tname2),
+            &[],
+        ).unwrap()
+        })
+        .await;
+
+    let re = Regex::new(r"^FOREIGN KEY \((\w+)\) REFERENCES (\w+)\((\w+)\)$").unwrap();
+    for i in fks.iter() {
+        let text: String = i.get(0);
+        let cap = re.captures(&text).unwrap();
+        let col = String::from(&cap[1]);
+        let table = String::from(&cap[2]);
+        let id = String::from(&cap[3]);
+        let shit: Vec<String> = db
+            .run(move |conn| {
+                conn.query(&format!("SELECT {} FROM {};", id, table), &[])
+                    .unwrap()
+            })
+            .await
+            .iter()
+            .map(|x| utils::get_sql(x, 0))
+            .collect();
+        eprintln!("{:?}", shit);
+    }
     let context = Table {
         name: tablename,
         cols: cols
