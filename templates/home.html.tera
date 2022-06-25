@@ -1,0 +1,60 @@
+{% extends "base" %}
+{% block title %}Home{% endblock title %}
+{% block content %}
+
+<h1>Home</h1>
+
+<div class="d-flex">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Cerca stazione</h5>
+            <p class="card-text"><input onchange="fill_path('stazione', this)" type="text"></p>
+            <a target="_blank" id="stazione" href="/stazione/" class="btn btn-primary">Cerca</a>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Cerca treno</h5>
+            <p class="card-text"><input onchange="fill_path('treno', this)" type="text"></p>
+            <a target="_blank" id="treno" href="/train_status/" class="btn btn-primary">Cerca</a>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Inserisci</h5>
+            <p class="card-text">
+                <select onchange="fill_path('inserici', this)">
+                    <option></option>
+                    <option value="puntodipassaggio">Punto di passaggio</option>
+                    <option value="attraversamentoteorico">Attraversamento teorico</option>
+                    <option value="attraversamento">Attraversamento</option>
+                    <option value="pdpstazione">Stazione</option>
+                    <option value="turno">Turno</option>
+                    <option value="persona">Persona</option>
+                    <option value="locomotiva">Locomotiva</option>
+                    <option value="carrozza">Carrozza</option>
+                    <option value="esercizio">Esercizio</option>
+                </select>
+            </p>
+            <a target="_blank" id="inserici" href="/insert/" class="btn btn-primary">Cerca</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        width: 18rem;
+        margin: 1em;
+    }
+</style>
+
+<script>
+    function fill_path(id, input) {
+        let link = document.getElementById(id);
+        let pieces = link.href.split('/');
+        pieces[pieces.length - 1] = input.value;
+        link.href = pieces.join('/');
+    }
+</script>
+
+{% endblock content %}

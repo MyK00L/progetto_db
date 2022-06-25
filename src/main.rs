@@ -35,7 +35,8 @@ fn rocket() -> _ {
                 routes::insert_item,
                 routes::insert_api,
                 routes::train_status,
-                routes::station_timetable
+                routes::station_timetable,
+                routes::home
             ],
         )
 }
