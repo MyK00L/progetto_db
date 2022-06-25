@@ -1308,6 +1308,7 @@ dependencies = [
  "postgres",
  "r2d2",
  "r2d2_postgres",
+ "regex",
  "rocket",
  "rocket_dyn_templates",
  "rocket_sync_db_pools",
