@@ -4,7 +4,7 @@
 
 <h1>Home</h1>
 
-<div class="d-flex">
+<div class="d-flex flex-wrap justify-content-evenly">
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">Cerca stazione</h5>
@@ -63,7 +63,6 @@
 
 <style>
     .card {
-        width: 18rem;
         margin: 1em;
     }
 </style>
