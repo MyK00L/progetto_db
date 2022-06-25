@@ -322,7 +322,7 @@ pub async fn list_table(
         // FIXME This doesn't work because everything is **casted** to a string
         .map(|x| {
             cols.iter()
-                .map(|y| crate::utils::get_sql(&x, y.name.as_str()))
+                .map(|y| crate::utils::get_sql(x, y.name.as_str()))
                 .collect()
         })
         .collect();
