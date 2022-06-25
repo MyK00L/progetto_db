@@ -303,7 +303,10 @@ pub async fn list_table(
         .run(move |conn| {
             if let Some((q, c)) = q.zip(c) {
                 conn.query(
-                    &format!("SELECT * FROM {} WHERE LOWER({}) LIKE $1", tname2, c),
+                    &format!(
+                        "SELECT * FROM {} WHERE LOWER({}::varchar(255)) LIKE $1",
+                        tname2, c
+                    ),
                     &[&format!("%{}%", q.to_lowercase())],
                 )
                 .unwrap()
