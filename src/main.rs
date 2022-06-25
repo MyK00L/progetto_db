@@ -37,6 +37,7 @@ fn rocket() -> _ {
                 routes::train_status,
                 routes::list_table,
                 routes::station_timetable,
+                routes::home,
             ],
         )
 }
