@@ -5,6 +5,7 @@ use rocket_sync_db_pools::database;
 use rocket_sync_db_pools::postgres::Client;
 mod db;
 mod routes;
+mod utils;
 
 #[database("database")]
 pub struct DbConn(Client);
