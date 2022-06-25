@@ -245,10 +245,11 @@ pub async fn insert_api(stuff: Form<Strict<InsertItem>>, db: crate::DbConn) -> S
     String::from("halp")
 }
 
-#[get("/list/<tablename>?<q>")]
+#[get("/list/<tablename>?<q>&<c>")]
 pub async fn list_table(
     tablename: String,
     q: Option<String>,
+    c: Option<String>,
     db: crate::DbConn,
 ) -> Option<Template> {
     #[derive(Debug, Serialize)]
@@ -300,8 +301,16 @@ pub async fn list_table(
 
     let data = db
         .run(move |conn| {
-            conn.query(&format!("SELECT * FROM {}", tname2), &[])
+            if let Some((q, c)) = q.zip(c) {
+                conn.query(
+                    &format!("SELECT * FROM {} WHERE LOWER({}) LIKE $1", tname2, c),
+                    &[&format!("%{}%", q.to_lowercase())],
+                )
                 .unwrap()
+            } else {
+                conn.query(&format!("SELECT * FROM {}", tname2), &[])
+                    .unwrap()
+            }
         })
         .await
         .iter()
@@ -319,7 +328,7 @@ pub async fn list_table(
         data,
     };
     eprintln!("{:?}", context);
-    Some(Template::render("list", &dbg!(context)))
+    Some(Template::render("list", context))
 }
 
 #[get("/")]
