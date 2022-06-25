@@ -320,6 +320,8 @@ pub async fn list_table(
     };
     eprintln!("{:?}", context);
     Some(Template::render("list", &dbg!(context)))
+}
+
 #[get("/")]
 pub async fn home() -> Template {
     let ctx: std::collections::HashMap<u8, u8> = Default::default();
