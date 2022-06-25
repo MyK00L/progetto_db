@@ -137,6 +137,7 @@ pub async fn insert_item(tablename: String, db: crate::DbConn) -> Option<Templat
         name: String,
         r#type: String,
         is_required: bool,
+        options: Option<Vec<String>>,
     }
     #[derive(Debug, Serialize)]
     struct Table {
@@ -156,9 +157,8 @@ pub async fn insert_item(tablename: String, db: crate::DbConn) -> Option<Templat
         .get(0)
         .map(|x| x.get("table_type"))
         .unwrap_or_else(|| String::from("N"));
-    eprintln!("{}", table_type);
     if table_type != "BASE TABLE" {
-        return None; // TODO: proper error
+        return None;
     }
     let tname1 = tablename.clone();
     let cols = db
@@ -182,13 +182,14 @@ pub async fn insert_item(tablename: String, db: crate::DbConn) -> Option<Templat
         .await;
 
     let re = Regex::new(r"^FOREIGN KEY \((\w+)\) REFERENCES (\w+)\((\w+)\)$").unwrap();
+    let mut completion = std::collections::HashMap::<String, Vec<String>>::new();
     for i in fks.iter() {
         let text: String = i.get(0);
         let cap = re.captures(&text).unwrap();
         let col = String::from(&cap[1]);
         let table = String::from(&cap[2]);
         let id = String::from(&cap[3]);
-        let shit: Vec<String> = db
+        let options: Vec<String> = db
             .run(move |conn| {
                 conn.query(&format!("SELECT {} FROM {};", id, table), &[])
                     .unwrap()
@@ -197,7 +198,7 @@ pub async fn insert_item(tablename: String, db: crate::DbConn) -> Option<Templat
             .iter()
             .map(|x| utils::get_sql(x, 0))
             .collect();
-        eprintln!("{:?}", shit);
+        completion.insert(col, options);
     }
     let context = Table {
         name: tablename,
@@ -208,6 +209,7 @@ pub async fn insert_item(tablename: String, db: crate::DbConn) -> Option<Templat
                 let column_type: String = col.get("data_type");
                 let is_nullable: String = "YES".to_owned(); //col.get("is_nullable");
                 Column {
+                    options: completion.get(&column_name).map(|x| x.to_owned()),
                     name: column_name,
                     r#type: column_type, // not
                     is_required: is_nullable == "NO",
