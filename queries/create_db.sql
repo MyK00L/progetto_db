@@ -37,3 +37,9 @@ CREATE OR REPLACE VIEW RitardoPdP AS SELECT categoria, numero, at.idpdp, (CURREN
         LEFT OUTER JOIN (SELECT * FROM attraversamento WHERE data::date = now()::date) a on treno.numero = a.idtreno AND a.idpdp = at.idpdp AND a.idtreno = at.idtreno;
 CREATE OR REPLACE VIEW RitardoTreno AS SELECT DISTINCT LAST_VALUE(ritardo) OVER(PARTITION BY numero ORDER BY orario RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) ritardo, numero FROM ritardopdp;
 CREATE OR REPLACE VIEW DestinazioneTreno AS SELECT DISTINCT LAST_VALUE(Nome) OVER(PARTITION BY numero ORDER BY orario RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) Nome, numero FROM ritardopdp JOIN PdPStazione s ON s.IDPdP = RitardoPdP.IDPdP;
+ALTER TABLE Attraversamento RENAME COLUMN Data TO DataArrivo;
+ALTER TABLE AttraversamentoTeorico RENAME COLUMN Orario TO OrarioArrivo;
+ALTER TABLE Attraversamento ADD COLUMN DataPartenza TIMESTAMP;
+ALTER TABLE AttraversamentoTeorico ADD COLUMN OrarioPartenza TIME;
+ALTER TABLE Attraversamento ALTER COLUMN DataArrivo DROP NOT NULL;
+ALTER TABLE AttraversamentoTeorico ALTER COLUMN OrarioArrivo DROP NOT NULL;
