@@ -6,8 +6,10 @@ pub async fn train_status(train_number: i32, db: crate::DbConn) -> Template {
     #[derive(Debug, Serialize)]
     struct Item {
         name: String,
-        scheduled_arrival: chrono::NaiveDateTime,
+        scheduled_arrival: Option<chrono::NaiveDateTime>,
+        scheduled_departure: Option<chrono::NaiveDateTime>,
         arrival: Option<chrono::NaiveDateTime>,
+        departure: Option<chrono::NaiveDateTime>,
     }
     #[derive(Debug, Serialize)]
     struct Context {
@@ -49,7 +51,7 @@ pub async fn train_status(train_number: i32, db: crate::DbConn) -> Template {
         .run(move |conn| {
             conn
         .query(
-            "SELECT orario, data, Nome FROM PdPStazione, RitardoPdP WHERE RitardoPdP.numero = $1 AND RitardoPdP.idpdp = PdPStazione.IDPdP ORDER BY orario",
+            "SELECT OrarioArrivo, OrarioPartenza, DataArrivo, DataPartenza, Nome FROM PdPStazione, RitardoPdP WHERE RitardoPdP.numero = $1 AND RitardoPdP.idpdp = PdPStazione.IDPdP ORDER BY OrarioArrivo",
             &[&train_number],
         ).unwrap()
         })
@@ -63,13 +65,17 @@ pub async fn train_status(train_number: i32, db: crate::DbConn) -> Template {
         items: cols
             .iter()
             .map(|col| {
-                let orario: chrono::NaiveDateTime = col.get("orario");
-                let data: Option<chrono::NaiveDateTime> = col.get("data");
+                let orario_arrivo: Option<chrono::NaiveDateTime> = col.get("OrarioArrivo");
+                let orario_partenza: Option<chrono::NaiveDateTime> = col.get("OrarioPartenza");
+                let data_arrivo: Option<chrono::NaiveDateTime> = col.get("DataArrivo");
+                let data_partenza: Option<chrono::NaiveDateTime> = col.get("DataPartenza");
                 let nome: String = col.get("Nome");
                 Item {
                     name: nome,
-                    scheduled_arrival: orario,
-                    arrival: data,
+                    scheduled_arrival: orario_arrivo,
+                    scheduled_departure: orario_partenza,
+                    arrival: data_arrivo,
+                    departure: data_partenza,
                 }
             })
             .collect(),

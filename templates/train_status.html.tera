@@ -4,7 +4,7 @@
 
 <h2>Stato treno {{categoria}} {{numero}} da {{ items | map(attribute="name") | first }} a {{ items | map(attribute="name") | last }}</h2>
 <main>
-<p><em>Ultimo rilevamento:</em> 
+<p><em>Ultimo rilevamento:</em>
 {% if ultimo_pdp_nome %}
 {{ultimo_pdp_nome}} alle {{ultimo_pdp_orario}}
 {% else %}
@@ -14,10 +14,10 @@ Non partito
 {% for item in items %}
 <section>
     <h3>{{item.name}}</h3>
-    <p><em>Arrivo programmato:</em> {{item.scheduled_arrival | date(format="%H:%M")}}</p>
+    <p><em>Arrivo programmato:</em> {% if item.scheduled_arrival %} {{item.scheduled_arrival | date(format="%H:%M")}} {% endif %} </p>
     <p><em>Arrivo effettivo:</em> {%if item.arrival%}{{item.arrival | date(format="%H:%M")}}{%endif%}</p>
-    <!--p><em>Partenza programmata:</em> {{item.scheduled_arrival | date(format="%H:%M")}}</p>
-    <p><em>Partenza effettiva:</em> {{item.arrival}} | date(format="%H:%M")</p-->
+    <p><em>Partenza programmata:</em> {% if item.scheduled_departure %} {{item.scheduled_departure | date(format="%H:%M")}} {% endif %} </p>
+    <p><em>Partenza effettiva:</em> {%if item.departure%}{{item.departure | date(format="%H:%M")}}{%endif%}</p>
 </section>
 {% endfor %}
 </main>

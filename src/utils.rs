@@ -22,6 +22,19 @@ where
     if let Ok(x) = row.try_get::<_, chrono::NaiveDateTime>(&idx) {
         return x.format("%d/%M/%Y %H:%M").to_string();
     }
+    if let Ok(x) = row.try_get::<_, Option<chrono::NaiveTime>>(&idx) {
+        return x.map(|y| y.format("%H:%M").to_string()).unwrap_or_default();
+    }
+    if let Ok(x) = row.try_get::<_, Option<chrono::NaiveDate>>(&idx) {
+        return x
+            .map(|y| y.format("%d/%M/%Y").to_string())
+            .unwrap_or_default();
+    }
+    if let Ok(x) = row.try_get::<_, Option<chrono::NaiveDateTime>>(&idx) {
+        return x
+            .map(|y| y.format("%d/%M/%Y %H:%M").to_string())
+            .unwrap_or_default();
+    }
     if let Ok(x) = row.try_get::<_, bool>(&idx) {
         return match x {
             true => "1",
