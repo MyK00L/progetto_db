@@ -29,9 +29,9 @@ CREATE TABLE IF NOT EXISTS Persona(ID SERIAL PRIMARY KEY, Nome TEXT, Cognome TEX
 CREATE TABLE IF NOT EXISTS Locomotiva(ID VARCHAR(12) PRIMARY KEY, Velocita INTEGER NOT NULL, Tensione TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS Carrozza(ID VARCHAR(12) PRIMARY KEY, Classe INTEGER NOT NULL, Posti INTEGER NOT NULL);
 CREATE TABLE IF NOT EXISTS Esercizio(IDConvoglio VARCHAR(12) NOT NULL, IDTreno INTEGER NOT NULL, Data TIMESTAMP NOT NULL);
-CREATE OR REPLACE VIEW RitardoPdP AS SELECT categoria, numero, at.idpdp, (CURRENT_DATE + orario) AS orario, data,
+CREATE OR REPLACE VIEW RitardoPdP AS SELECT categoria, numero, at.idpdp, (CURRENT_DATE + COALESCE(OrarioPartenza, OrarioArrivo)) AS orario, data,
        GREATEST(0, EXTRACT(EPOCH FROM (COALESCE(a.data AT TIME ZONE 'Europe/Rome', NOW())) -
-       (CURRENT_DATE + at.orario) AT TIME ZONE 'Europe/Rome') / 60) AS ritardo
+       (CURRENT_DATE + COALESCE(at.OrarioPartenza, at.OrarioArrivo)) AT TIME ZONE 'Europe/Rome') / 60) AS ritardo
     FROM treno
         JOIN attraversamentoteorico at on treno.numero = at.idtreno
         LEFT OUTER JOIN (SELECT * FROM attraversamento WHERE data::date = now()::date) a on treno.numero = a.idtreno AND a.idpdp = at.idpdp AND a.idtreno = at.idtreno;
