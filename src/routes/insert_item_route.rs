@@ -11,6 +11,7 @@ pub async fn insert_item(tablename: String, db: crate::DbConn) -> Option<Templat
         r#type: String,
         is_required: bool,
         options: Option<Vec<String>>,
+        enum_options: Option<Vec<String>>,
     }
     #[derive(Debug, Serialize)]
     struct Table {
@@ -38,7 +39,7 @@ pub async fn insert_item(tablename: String, db: crate::DbConn) -> Option<Templat
         .run(move |conn| {
             conn
         .query(
-            "SELECT column_name, data_type FROM information_schema.columns WHERE table_name like $1",
+            "SELECT column_name, data_type, udt_name FROM information_schema.columns WHERE table_name like $1",
             &[&tname1],
         ).unwrap()
         })
@@ -73,7 +74,7 @@ pub async fn insert_item(tablename: String, db: crate::DbConn) -> Option<Templat
             .collect();
         completion.insert(col, options);
     }
-    let context = Table {
+    let mut context = Table {
         name: tablename,
         cols: cols
             .iter()
@@ -83,6 +84,7 @@ pub async fn insert_item(tablename: String, db: crate::DbConn) -> Option<Templat
                 let is_nullable: String = "YES".to_owned(); //col.get("is_nullable");
                 Column {
                     options: completion.get(&column_name).map(|x| x.to_owned()),
+                    enum_options: None,
                     name: column_name,
                     r#type: column_type, // not
                     is_required: is_nullable == "NO",
@@ -90,6 +92,26 @@ pub async fn insert_item(tablename: String, db: crate::DbConn) -> Option<Templat
             })
             .collect(),
     };
-    eprintln!("{:?}", context);
+    for i in 0..context.cols.len() {
+        if context.cols[i].r#type == "USER-DEFINED" {
+            let enum_name: String = cols[i].get("udt_name");
+            let options: Vec<String> = db
+                .run(move |conn| {
+                    conn.query(
+                        &format!(
+                            "SELECT unnest(enum_range(NULL::{}))::text AS values",
+                            enum_name
+                        ),
+                        &[],
+                    )
+                    .unwrap()
+                })
+                .await
+                .iter()
+                .map(|x| x.get("values"))
+                .collect();
+            context.cols[i].enum_options = Some(options);
+        }
+    }
     Some(Template::render("insert_item", &context))
 }
