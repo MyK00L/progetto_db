@@ -11,6 +11,14 @@
 	{% for col in cols %}
 	<div class="form-group">
 		<label for="columns.{{col.name}}">{{col.name}}</label>
+		
+		{% if col.enum_options %}
+			<select {% if col.is_required %} required {% endif %} class="form-control" id="columns.{{col.name}}" name="columns.{{col.name}}">
+			{% for option in col.enum_options %}
+				<option value="{{option}}">{{option}}</option>
+			{% endfor %}
+			</select>
+		{% else %}
 		<input {% if col.is_required %} required {% endif %} type="{{col.type}}" class="form-control{% if col.options %} awesomeplete{% endif %}"{% if col.options %} list="columns.{{col.name}}-list"{% endif %} id="columns.{{col.name}}" name="columns.{{col.name}}" placeholder="{{col.name}}" />
 		{% if col.options %}
 		<datalist id="columns.{{col.name}}-list">
@@ -19,6 +27,8 @@
 		{% endfor %}
 		</datalist>
 		{% endif %}
+		{% endif %}
+
   </div>
 	{% endfor %}
 	<button type="submit" class="btn btn-primary">Inserisci</button>

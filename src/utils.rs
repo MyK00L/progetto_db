@@ -17,22 +17,22 @@ where
         return x.format("%H:%M").to_string();
     }
     if let Ok(x) = row.try_get::<_, chrono::NaiveDate>(&idx) {
-        return x.format("%d/%M/%Y").to_string();
+        return x.format("%d/%m/%Y").to_string();
     }
     if let Ok(x) = row.try_get::<_, chrono::NaiveDateTime>(&idx) {
-        return x.format("%d/%M/%Y %H:%M").to_string();
+        return x.format("%d/%m/%Y %H:%M").to_string();
     }
     if let Ok(x) = row.try_get::<_, Option<chrono::NaiveTime>>(&idx) {
         return x.map(|y| y.format("%H:%M").to_string()).unwrap_or_default();
     }
     if let Ok(x) = row.try_get::<_, Option<chrono::NaiveDate>>(&idx) {
         return x
-            .map(|y| y.format("%d/%M/%Y").to_string())
+            .map(|y| y.format("%d/%m/%Y").to_string())
             .unwrap_or_default();
     }
     if let Ok(x) = row.try_get::<_, Option<chrono::NaiveDateTime>>(&idx) {
         return x
-            .map(|y| y.format("%d/%M/%Y %H:%M").to_string())
+            .map(|y| y.format("%d/%m/%Y %H:%M").to_string())
             .unwrap_or_default();
     }
     if let Ok(x) = row.try_get::<_, bool>(&idx) {
