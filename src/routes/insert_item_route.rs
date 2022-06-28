@@ -92,9 +92,9 @@ pub async fn insert_item(tablename: String, db: crate::DbConn) -> Option<Templat
             })
             .collect(),
     };
-    for i in 0..context.cols.len() {
+    for (i, col) in cols.iter().enumerate() {
         if context.cols[i].r#type == "USER-DEFINED" {
-            let enum_name: String = cols[i].get("udt_name");
+            let enum_name: String = col.get("udt_name");
             let options: Vec<String> = db
                 .run(move |conn| {
                     conn.query(
