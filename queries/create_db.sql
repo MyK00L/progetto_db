@@ -37,7 +37,8 @@ CREATE OR REPLACE VIEW RitardoPdP AS SELECT categoria, numero, at.idpdp, (CURREN
        (CURRENT_DATE + COALESCE(at.OrarioPartenza, at.OrarioArrivo)) AT TIME ZONE 'Europe/Rome') / 60) AS ritardo
     FROM treno
         JOIN attraversamentoteorico at on treno.numero = at.idtreno
-        LEFT OUTER JOIN (SELECT * FROM attraversamento WHERE COALESCE(datapartenza, dataarrivo)::date = now()::date) a on treno.numero = a.idtreno AND a.idpdp = at.idpdp AND a.idtreno = at.idtreno;
+        JOIN PuntoDiPassaggioAstratto pdpa on at.idpdp = pdpa.id
+        LEFT OUTER JOIN (SELECT * FROM attraversamento WHERE COALESCE(datapartenza, dataarrivo)::date = now()::date) a on treno.numero = a.idtreno AND a.IDAstratto = pdpa.idpdp AND a.idtreno = at.idtreno;
 
 CREATE OR REPLACE VIEW RitardoTreno AS SELECT DISTINCT LAST_VALUE(ritardo) OVER(PARTITION BY numero ORDER BY orario RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) ritardo, numero FROM ritardopdp;
 CREATE OR REPLACE VIEW DestinazioneTreno AS SELECT DISTINCT LAST_VALUE(Nome) OVER(PARTITION BY numero ORDER BY orario RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) Nome, numero FROM ritardopdp JOIN PdPStazione s ON s.IDPdP = RitardoPdP.IDPdP;
