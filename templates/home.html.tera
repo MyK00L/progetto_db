@@ -34,6 +34,8 @@
                     <option value="locomotiva">Locomotiva</option>
                     <option value="carrozza">Carrozza</option>
                     <option value="esercizio">Esercizio</option>
+                    <option value="pdpastratto">Punto di passaggio astratto</option>
+                    <option value="convoglio">Convoglio</option>
                 </select>
             </p>
             <a target="_blank" id="inserici" href="/insert/" class="btn btn-primary">Inserisci</a>
@@ -54,6 +56,8 @@
                     <option value="locomotiva">Locomotiva</option>
                     <option value="carrozza">Carrozza</option>
                     <option value="esercizio">Esercizio</option>
+                    <option value="pdpastratto">Punto di passaggio astratto</option>
+                    <option value="convoglio">Convoglio</option>
                 </select>
             </p>
             <a target="_blank" id="list" href="/list/" class="btn btn-primary">Mostra</a>
