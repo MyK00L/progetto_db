@@ -20,22 +20,6 @@ pub async fn list_table(
         data: Vec<Vec<String>>,
     }
 
-    let tname0 = tablename.clone();
-    let table_type: String = db
-        .run(move |conn| {
-            conn.query(
-                "SELECT table_type FROM information_schema.tables WHERE table_name like $1",
-                &[&(tname0)],
-            )
-            .unwrap()
-        })
-        .await
-        .get(0)
-        .map(|x| x.get("table_type"))
-        .unwrap_or_else(|| String::from("N"));
-    if table_type != "BASE TABLE" {
-        return None; // TODO: proper error
-    }
     let tname1 = tablename.clone();
     let tname2 = tablename.clone();
     let cols: Vec<Column> = db

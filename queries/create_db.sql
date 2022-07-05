@@ -46,4 +46,4 @@ CREATE OR REPLACE VIEW RitardoPdP AS SELECT categoria, numero, at.idpdp, (CURREN
 CREATE OR REPLACE VIEW RitardoTreno AS SELECT DISTINCT LAST_VALUE(ritardo) OVER(PARTITION BY numero ORDER BY orario RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) ritardo, numero FROM ritardopdp;
 CREATE OR REPLACE VIEW DestinazioneTreno AS SELECT DISTINCT LAST_VALUE(Nome) OVER(PARTITION BY numero ORDER BY orario RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) Nome, numero FROM ritardopdp JOIN PdPStazione s ON s.IDPdP = RitardoPdP.IDPdP;
 CREATE OR REPLACE VIEW TurniPersona AS SELECT * FROM Persona JOIN Turno ON Turno.IDPersona = Persona.ID;
-CREATE OR REPLACE VIEW ComposizioneTreno AS SELECT * FROM Esercizio JOIN Convoglio ON Esercizio.IDConvoglio = Convoglio.ID JOIN Carrozza on Convoglio.IDCarrozza = Carrozza.ID;
+SELECT esercizio.*, carrozza.* FROM Esercizio JOIN Convoglio ON Esercizio.IDConvoglio = Convoglio.ID JOIN Carrozza on Convoglio.IDCarrozza = Carrozza.ID;
