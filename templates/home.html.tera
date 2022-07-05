@@ -25,6 +25,7 @@
             <p class="card-text">
                 <select onchange="fill_path('inserici', this)">
                     <option></option>
+                    <option value="puntodipassaggioastratto">Punto di passaggio astratto</option>
                     <option value="puntodipassaggio">Punto di passaggio</option>
                     <option value="attraversamentoteorico">Attraversamento teorico</option>
                     <option value="attraversamento">Attraversamento</option>
@@ -34,6 +35,7 @@
                     <option value="locomotiva">Locomotiva</option>
                     <option value="carrozza">Carrozza</option>
                     <option value="esercizio">Esercizio</option>
+                    <option value="convoglio">Convoglio</option>
                 </select>
             </p>
             <a target="_blank" id="inserici" href="/insert/" class="btn btn-primary">Inserisci</a>
@@ -45,6 +47,7 @@
             <p class="card-text">
                 <select onchange="fill_path('list', this)">
                     <option></option>
+                    <option value="puntodipassaggioastratto">Punto di passaggio astratto</option>
                     <option value="puntodipassaggio">Punto di passaggio</option>
                     <option value="attraversamentoteorico">Attraversamento teorico</option>
                     <option value="attraversamento">Attraversamento</option>
@@ -54,6 +57,7 @@
                     <option value="locomotiva">Locomotiva</option>
                     <option value="carrozza">Carrozza</option>
                     <option value="esercizio">Esercizio</option>
+                    <option value="convoglio">Convoglio</option>
                 </select>
             </p>
             <a target="_blank" id="list" href="/list/" class="btn btn-primary">Mostra</a>
