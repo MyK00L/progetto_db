@@ -1,0 +1,15 @@
+{% extends "base" %}
+{% block title %}Composizione treno{% endblock title %}
+{% block content %}
+
+<h2>Composizione treno</h2>
+<main>
+	<p>Posti prima classe liberi: {{class_1_seats}}</p>
+	<p>Posti seconda classe liberi: {{class_2_seats}}</p>
+	<p>Coaches</p>
+	{% for coach in coaches %}
+	<p>classe: {{coach.class}} posti: {{coach.seats}}</p>
+	{% endfor %}
+</main>
+{% endblock content %}
+
