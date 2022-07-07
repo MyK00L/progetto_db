@@ -3,16 +3,45 @@
 \usepackage[italian]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[style=numeric-comp]{biblatex}
+%\usepackage[style=numeric-comp]{biblatex}
 
 \title{InfoTreno}
-\author{Chelli M. \cite{915585}, Tampieri E.\cite{915602} - Gruppo 2098}
+\author{Chelli M. \thanks{michael.chelli@studio.unibo.it - 915585}, Tampieri E.\thanks{eugenio.tampieri@studio.unibo.it - 915602} - Gruppo 2098}
 
 \begin{document}
-    \maketitle
-    \tableofcontents
-    \chapter{Analisi}
-    \section{Requisiti}
-    \subsection{Requisiti funzionali}
-    \printbibliography[heading=bibintoc]
+	\maketitle
+	\tableofcontents
+	\chapter{Analisi dei requisiti}
+	\section{Intervista}
+	\section{Rilevamento delle ambiguità e correzioni proposte}
+	\subsection{Dopo la correzione delle ambiguità}
+	\section{Definizione delle specifiche in linguaggio naturale ed estrazione dei concetti principali}
+	\chapter{Progettazione concettuale}
+	\section{Schema scheletro}
+	\section{Raffinamenti proposti}
+	\subsection{Entità ...}
+	\section{Schema concettuale finale}
+	\chapter{Progettazione logica}
+	\section{Stima del volume dei dati}
+	\section{Descrizione delle operazioni principali e stima della loro frequenza}
+	\section{Schemi di navigazione e tabelle degli accessi}
+	\subsection{Schemi di navigazione}
+	\subsection{Tabella degli accessi}
+	\section{Raffinamento dello schema (eliminazione di identificatori esterni, attributi composti e gerarchie, scelta delle chiavi)}
+	\subsection{Eliminazione delle gerarchie}
+	\subsection{Attributi composti}
+	\subsection{Scelta delle chiavi primarie}
+	\subsection{Chiavi esterne}
+	\subsection{Vincoli di gruppo}
+	\subsection{Accorgimenti}
+	\section{Analisi delle ridondanze}
+	\section{Traduzione di entità e associazioni in relazioni}
+	\section{Schema relazionale finale}
+	\section{Traduzione delle operazioni in query SQL}
+	\chapter{Progettazione dell'applicazione}
+	\section{Descrizione dell'architettura dell'applicazione realizzata}
+	\subsection{Homepage}
+	\subsection{Ricerca treno}
+	\subsection{Ricerca stazione...}
+    %\printbibliography[heading=bibintoc]
 \end{document}
