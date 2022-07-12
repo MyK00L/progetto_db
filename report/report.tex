@@ -93,8 +93,29 @@
 	\chapter{Progettazione dell'applicazione}
 	
 	\section{Descrizione dell'architettura dell'applicazione realizzata}
+	Si sviluppa un interfaccia web per la gestione del sistema.
+	Il linguaggio usato per il webserver che gestisce le richieste dell'interfaccia e' il Rust.
+	Il webserver si interfaccia al database tramite la crate postgres.
+	Il DBMS usato e' PostgreSQL.
+	Per ogni tabella si possono inserire righe tramite un form.
+	Ogni tabella o view si puo visualizzare, anche ricercando campi.
+	Dalla home page si possono anche cercare informazioni su treni e stazioni, che portano a pagine specifiche.
+
 	\subsection{Homepage}
-	\subsection{Ricerca treno}
+	\begin{figure}
+		\includegraphics[width=\linewidth]{res/screenshots/home.png}
+		\caption{homepage}
+	\end{figure}
+	Dalla homepage si puo accedere alle 2 funzioni principali di gestione del database: inserimento e ricerca,
+	selezionando tramite un menu drop-down la tabella o view interessata.
+	Si puo inoltre accedere a informazioni su treni e stazioni, con una ricerca con suggerimenti.
+	\subsection{Ricerca stazione}
+	\begin{figure}
+		\includegraphics[width=\linewidth]{res/screenshots/stazione.png}
+		\caption{ricerca stazione}
+	\end{figure}
+	Nella pagina relativa alla ricerca della stazione si puo 
+	
 	\subsection{Ricerca stazione...}
     %\printbibliography[heading=bibintoc]
 \end{document}
