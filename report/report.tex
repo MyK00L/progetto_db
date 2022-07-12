@@ -23,6 +23,7 @@
 	\section{Definizione delle specifiche in linguaggio naturale ed estrazione dei concetti principali}
 	\par Si individuano le parole chiave che permetteranno di costruire un primo schema scheletro del progetto. In seguito sarà poi raffinato per ottenere lo schema definitivo. I termini essenziali sono evidenziati in grassetto e in corsivo.
 	\chapter{Progettazione concettuale}
+	\par In questa situazione il dominio è specifico ed è spesso possibile trovare delle entità generiche che si concretizzano poi in entità più specifiche. Per questo motivo è utile utilizzare un approccio top-down per modellare al meglio l'architettura.
 	\section{Schema scheletro}
 	\section{Raffinamenti proposti}
 	\subsection{Entità ...}
@@ -64,5 +65,23 @@
 	\subsection{Homepage}
 	\subsection{Ricerca treno}
 	\subsection{Ricerca stazione...}
+	\appendix
+	\chapter{Istruzioni per l'installazione}
+	\section{Prerequisiti}
+	\begin{itemize}
+		\item Un DBMS PostgreSQL con già creato un database vuoto
+		\item Un utente che abbia i permessi di creazione tabelle e viste, di interrogazione e di inserimento sul database
+	\end{itemize}
+	\section{Configurazione}
+	\par \`E necessario creare un file denominato \texttt{.env} nella cartella in cui verrà eseguito il programma, contenente nel formato \texttt{<KEY>=<VALUE>} (una variabile per riga) le seguenti variabili:
+	\begin{itemize}
+		\item \texttt{DB\_HOST}: l'indirizzo IP o l'hostname su cui è raggiungibile il DBMS,
+		\item \texttt{DB\_NAME}: il nome del DB in cui verranno create le tabelle,
+		\item \texttt{DB\_USER}: l'utente per autenticarsi al DB,
+		\item \texttt{DB\_PASSWORD}: la password dell'utente sopra specificato.
+	\end{itemize}
+	\section{Esecuzione del programma}
+	\par Dopo aver scaricato l'eseguibile per la piattaforma desiderata, controllare che abbia i permessi di esecuzione (se richiesti) ed eseguirlo nella cartella in cui è stato posizionato il file \texttt{.env} e la cartella \texttt{templates}.
+	\par Il programma provvederà all'inizializzazione del DB e si metterà in ascolto sulla porta TCP 8000.
     %\printbibliography[heading=bibintoc]
 \end{document}
