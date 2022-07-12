@@ -76,11 +76,13 @@ pub async fn list_table(
         .iter()
         .map(|x| {
             cols.iter()
-                .map(|y| crate::utils::get_sql(x, y.name.as_str()))
+                .map(|y| {
+                    x.get::<_, Option<String>>(y.name.as_str())
+                        .unwrap_or_default()
+                })
                 .collect()
         })
         .collect();
-
     let context = Table {
         name: tablename,
         cols,
