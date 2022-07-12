@@ -20,19 +20,25 @@ pub async fn train_status(train_number: i32, db: crate::DbConn) -> Template {
         ultimo_pdp_orario: Option<chrono::NaiveDateTime>,
         items: Vec<Item>,
     }
-    let (ultimo_pdp_nome, ultimo_pdp_orario, ritardo) = db
+    let (ultimo_pdp_nome, ultimo_pdp_orario) = db
         .run(move |conn| {
-            conn.query("SELECT rpdp.ritardo AS r, rpdp.data AS orario, pdps.nome FROM RitardoPdP rpdp LEFT JOIN PdPStazione pdps on rpdp.idpdp = pdps.idpdp WHERE rpdp.numero = $1 ORDER BY orario DESC;", &[&train_number])
+            conn.query("SELECT rpdp.data AS orario, pdps.nome FROM RitardoPdP rpdp LEFT JOIN PdPStazione pdps on rpdp.idpdp = pdps.idpdp WHERE rpdp.numero = $1 ORDER BY orario DESC;", &[&train_number])
                 .unwrap()
         })
-        .await.iter().map(|x| (x.get("nome"),
-        {
-            let y: Option<chrono::NaiveDateTime> = x.get("orario");
-            y
-        }, {
-            let a: f64 = x.get("r");
-            a
-        } as i16)).find(|x| (x.1).is_some()).unwrap_or_default();
+        .await.iter().map(|x| (x.get("nome"),x.get::<_,Option<chrono::NaiveDateTime>>("orario"))).find(|x| (x.1).is_some()).unwrap_or_default();
+    let ritardo = db
+        .run(move |conn| {
+            conn.query(
+                "select ritardo from ritardotreno where numero = $1",
+                &[&train_number],
+            )
+            .unwrap()
+        })
+        .await
+        .iter()
+        .map(|x| x.get::<_, f64>(0) as i16)
+        .next()
+        .unwrap_or_default();
 
     let categoria = db
         .run(move |conn| {

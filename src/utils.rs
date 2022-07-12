@@ -42,5 +42,9 @@ where
         }
         .to_string();
     }
-    panic!("Failed to convert `{}` to string", idx);
+    panic!(
+        "Failed to convert `{}` to string\nrow: {:?}",
+        idx,
+        row.columns()
+    );
 }
