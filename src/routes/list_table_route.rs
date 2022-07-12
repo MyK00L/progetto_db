@@ -37,7 +37,7 @@ pub async fn list_table(
             Column {name:column_name, sql_type: col.get("data_type") }
         })
         .collect();
-    let cols1=cols.clone();
+    let cols1 = cols.clone();
 
     let data = db
         .run(move |conn| {
@@ -45,7 +45,8 @@ pub async fn list_table(
                 conn.query(
                     &format!(
                         "SELECT {} FROM {} WHERE LOWER({}::varchar(255)) LIKE $1",
-                        cols1.iter()
+                        cols1
+                            .iter()
                             .map(|x| format!("{}::varchar(255)", x.name))
                             .collect::<Vec<String>>()
                             .join(","),
@@ -59,7 +60,8 @@ pub async fn list_table(
                 conn.query(
                     &format!(
                         "SELECT {} FROM {}",
-                        cols1.iter()
+                        cols1
+                            .iter()
                             .map(|x| format!("{}::varchar(255)", x.name))
                             .collect::<Vec<String>>()
                             .join(","),
