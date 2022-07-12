@@ -3,6 +3,7 @@
 \usepackage[italian]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+\usepackage{graphicx}
 %\usepackage[style=numeric-comp]{biblatex}
 
 \title{InfoTreno}
@@ -15,13 +16,43 @@
 	\section{Intervista}
 	\par RFS (Rete Ferroviaria dello Stato) richiede la realizzazione di un sistema informativo in grado di monitorare la marcia e la programmazione dei treni e la gestione dei turni del personale di bordo. Viene richiesta la possibilità di operare tramite interfaccia web, in modo da essere indipendenti dalle piattaforme utilizzate.
 	\par Un treno è uno specifico viaggio su una relazione, ovvero l'attraversamento sequenziale di una serie di punti di passaggio (scambi, stazioni, o semplici) in orari predeterminati.
-	\par Oltre alla memorizzazione degli orari di attraversamento teorico, viene richiesta la memorizzazione della data e ora di partenza e di arrivo da un punto di passaggio, così da poter calcolare il ritardo del treno.
+	\par Oltre alla memorizzazione degli orari di attraversamento teorici, viene richiesta la memorizzazione della data e ora di partenza e di arrivo da un punto di passaggio, così da poter calcolare il ritardo del treno.
 	\par Un treno è poi composto da una locomotiva (della quale ci interessa conoscere la velocità e la tensione di esercizio) e una serie di carrozze (delle quali ci interessa memorizzare la classe e il numero di posti), che formano un convoglio.
 	\par Su un treno prendono servizio un macchinista, un capotreno e, in certi casi, dei controllori.
+
 	\section{Rilevamento delle ambiguità e correzioni proposte}
+	\par RFS (Rete Ferroviaria dello Stato) richiede la realizzazione di un sistema informativo in grado di monitorare la marcia e la programmazione dei treni e la gestione dei turni del personale di bordo. Viene richiesta la possibilità di operare\textsuperscript{1} tramite interfaccia web, in modo da essere indipendenti dalle piattaforme utilizzate.
+	\par Un treno è uno specifico viaggio su una relazione\textsuperscript{2}, ovvero l'attraversamento sequenziale di una serie di punti di passaggio\textsuperscript{3} (scambi, stazioni, o semplici\textsuperscript{4}) in orari predeterminati.
+	\par Oltre alla memorizzazione degli orari di attraversamento teorico, viene richiesta la memorizzazione della data e ora di partenza e di arrivo da un punto di passaggio, così da poter calcolare il ritardo del treno.
+	\par Un treno è poi composto da una locomotiva (della quale ci interessa conoscere la velocità e la tensione di esercizio) e una serie di carrozze (delle quali ci interessa memorizzare la classe\textsuperscript{5} e il numero di posti), che formano un convoglio.
+	\par Su un treno prendono servizio un macchinista, un capotreno e, in certi casi, dei controllori.
+
+	\begin{tabular}{|p{1cm}|p{3cm}|p{4cm}|p{4cm}|}
+		\hline
+		Num & Espressione & Sostituzione & Motivazione \\ \hline
+		1 & operare & operare il sistema & specificato il soggetto \\ \hline
+		2 & relazione & linea ferroviaria & termine corretto \\ \hline
+		3 & punti di passaggio & rappresentati nel mondo fisico da eurobalise & specificato il significato \\ \hline
+		4 & semplici & altri & specificato il significato \\ \hline
+		5 & classe & classe (prima o seconda) & specificato is significato \\ \hline
+	\end{tabular}
+
 	\subsection{Dopo la correzione delle ambiguità}
+	\par RFS (Rete Ferroviaria dello Stato) richiede la realizzazione di un sistema informativo in grado di monitorare la marcia e la programmazione dei treni e la gestione dei turni del personale di bordo. Viene richiesta la possibilità di operare is sistema tramite interfaccia web, in modo da essere indipendenti dalle piattaforme utilizzate.
+	\par Un treno è uno specifico viaggio su una linea ferroviaria, ovvero l'attraversamento sequenziale di una serie di punti di passaggio, rappresentati nel mondo fisico da eurobalise (scambi, stazioni, o altri) in orari predeterminati.
+	\par Oltre alla memorizzazione degli orari di attraversamento teorico, viene richiesta la memorizzazione della data e ora di partenza e di arrivo da un punto di passaggio, così da poter calcolare il ritardo del treno.
+	\par Un treno è poi composto da una locomotiva (della quale ci interessa conoscere la velocità e la tensione di esercizio) e una serie di carrozze (delle quali ci interessa memorizzare la classe (prima o seconda) e il numero di posti), che formano un convoglio.
+	\par Su un treno prendono servizio un macchinista, un capotreno e, in certi casi, dei controllori.
+
 	\section{Definizione delle specifiche in linguaggio naturale ed estrazione dei concetti principali}
 	\par Si individuano le parole chiave che permetteranno di costruire un primo schema scheletro del progetto. In seguito sarà poi raffinato per ottenere lo schema definitivo. I termini essenziali sono evidenziati in grassetto e in corsivo.
+	\par RFS (Rete Ferroviaria dello Stato) richiede la realizzazione di un sistema informativo in grado di monitorare la marcia e la programmazione dei treni e la gestione dei turni del personale di bordo. Viene richiesta la possibilità di operare is sistema tramite interfaccia web, in modo da essere indipendenti dalle piattaforme utilizzate.
+	\par Un \textbf{\textit{treno}} è uno specifico viaggio su una linea ferroviaria, ovvero l'attraversamento sequenziale di una serie di \textbf{\textit{punti di passaggio}}, rappresentati nel mondo fisico da eurobalise (scambi, stazioni, o altri) in orari predeterminati.
+	\par Oltre alla memorizzazione degli orari di \textbf{\textit{attraversamento}} teorico, viene richiesta la memorizzazione della data e ora di partenza e di arrivo da un punto di passaggio, così da poter calcolare il \textbf{\textit{ritardo}} del treno.
+	\par Un treno è poi composto da una \textbf{\textit{locomotiva}} (della quale ci interessa conoscere la velocità e la tensione di esercizio) e una serie di \textbf{\textit{carrozze}} (delle quali ci interessa memorizzare la classe (prima o seconda) e il numero di posti), che formano un \textbf{\textit{convoglio}}.
+	\par Su un treno prendono servizio un macchinista, un capotreno e, in certi casi, dei controllori.
+
+
 	\chapter{Progettazione concettuale}
 	\par In questa situazione il dominio è specifico ed è spesso possibile trovare delle entità generiche che si concretizzano poi in entità più specifiche. Per questo motivo è utile utilizzare un approccio top-down per modellare al meglio l'architettura.
 	\section{Schema scheletro}
@@ -61,6 +92,7 @@
 	\section{Schema relazionale finale}
 	\section{Traduzione delle operazioni in query SQL}
 	\chapter{Progettazione dell'applicazione}
+	
 	\section{Descrizione dell'architettura dell'applicazione realizzata}
 	\subsection{Homepage}
 	\subsection{Ricerca treno}
