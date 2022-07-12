@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS Carrozza(ID VARCHAR(12) PRIMARY KEY, Classe INTEGER N
 CREATE TABLE IF NOT EXISTS Convoglio(ID INTEGER NOT NULL, IDCarrozza VARCHAR(12) NOT NULL);
 CREATE TABLE IF NOT EXISTS Esercizio(IDConvoglio INTEGER NOT NULL, IDTreno INTEGER NOT NULL, Data TIMESTAMP NOT NULL);
 
-CREATE OR REPLACE VIEW RitardoPdP AS SELECT categoria, numero, at.idpdp, (CURRENT_DATE + COALESCE(OrarioPartenza, OrarioArrivo)) AS orario, COALESCE(datapartenza, dataarrivo) as data,
+CREATE OR REPLACE VIEW RitardoPdP AS SELECT at.OrarioArrivo, at.OrarioPartenza, a.DataArrivo, a.DataPartenza, categoria, numero, at.idpdp, (CURRENT_DATE + COALESCE(OrarioPartenza, OrarioArrivo)) AS orario, COALESCE(datapartenza, dataarrivo) as data,
        GREATEST(0, EXTRACT(EPOCH FROM (COALESCE(a.datapartenza AT TIME ZONE 'Europe/Rome', a.dataarrivo AT TIME ZONE 'Europe/Rome', NOW())) -
        (CURRENT_DATE + COALESCE(at.OrarioPartenza, at.OrarioArrivo)) AT TIME ZONE 'Europe/Rome') / 60) AS ritardo
     FROM treno
