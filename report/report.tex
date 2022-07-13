@@ -4,6 +4,8 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{graphicx}
+\usepackage{float}
+\restylefloat{table}
 %\usepackage[style=numeric-comp]{biblatex}
 
 \title{InfoTreno}
@@ -61,7 +63,7 @@
 	\chapter{Progettazione logica}
 	\section{Stima del volume dei dati}
 	\par Si ripoerao le stime dei volumi dei dati dopo un anno di operatività.
-	\begin{table}
+	\begin{table}[H]
 	\centering
 	\begin{tabular}{|l|l|l|}
 		\hline Nome & Tipo & Volume \\
@@ -82,7 +84,7 @@
 	\end{table}
 	\section{Descrizione delle operazioni principali e stima della loro frequenza}
 	Di seguito si riportano le operazioni effettuate e la stima della loro frequenza dopo un anno di operatività.
-	\begin{table}
+	\begin{table}[H]
 	\centering
 	\begin{tabular}{|l|l|l|}
 		\hline N & Descrizione & Frequenza \\
