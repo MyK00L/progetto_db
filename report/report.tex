@@ -65,7 +65,7 @@
 		\caption{Schema scheletro}
 	\end{figure}
 	\section{Raffinamenti proposti}
-	\par Lo schema concettuale sarà sviluppato perfezionando tutte le entità nello schema scheletro. Per ogni entità si propone di seguito una vista esplosa, l’unione delle quali condurrà allo schema finale.
+	\par Lo schema concettuale sarà sviluppato perfezionando tutte le entità nello schema scheletro. Per ogni entità si propone di seguito una vista esplosa, l'unione delle quali condurrà allo schema finale.
 	\subsection{Entità \textit{MaterialeRotabile}}
 	\begin{figure}[h]
 		\begin{center}
@@ -134,18 +134,29 @@
 	\begin{table}[H]
 	\centering
 	\begin{tabular}{|l|l|l|}
-		\hline Nome & Tipo & Volume \\
+		\hline \textbf{Nome} & \textbf{Tipo} & \textbf{Volume} \\
 		\hline Treno & E & 30000 \\
-		\hline PuntoDiPassaggioAstratto & E & 10000 \\
 		\hline PuntoDiPassaggio & E & 10000 \\
-		\hline AttraversamentoTeorico & E & 3285000000 \\
+		\hline Stazione & E & 1000 \\
+		\hline Semplice & E & 6000 \\
+		\hline Scambio & E & 3000 \\
+		\hline Concretizzazione & R & 50000 \\
+		\hline AttraversamentoTeorico & E & 9000000 \\
 		\hline Attraversamento & E & 3285000000 \\
-		\hline PdPStazione & E &  1000 \\
-		\hline Turno & R & 20000000 \\
 		\hline Persona & E & 50000 \\
+		\hline PersonaleDiBordo & E & 50000 \\
+		\hline Macchinista & E & 12500 \\
+		\hline Conduzione & R & 10950000 \\
+		\hline Capotreno & E & 12500 \\
+		\hline Responsabilit\`a & R & 10950000 \\
+		\hline Controllore & E & 25000 \\
+		\hline Controlleria & R & 10950000 \\
+		\hline MaterialeRotabile & E & 60000 \\
 		\hline Locomotiva & E & 10000 \\
+		\hline Traino & R & 20000 \\
 		\hline Carrozza & E & 50000 \\
-		\hline Convoglio & E & 10000 \\
+		\hline Composizione & R & 50000 \\
+		\hline Convoglio & E & 20000 \\
 		\hline Esercizio & R & 10950000 \\
 		\hline
 	\end{tabular}
@@ -155,7 +166,7 @@
 	\begin{table}[H]
 	\centering
 	\begin{tabular}{|l|l|l|}
-		\hline N & Descrizione & Frequenza \\
+		\hline \textbf{N} & \textbf{Descrizione} & \textbf{Frequenza} \\
 		\hline 1 & Treno: inserimento & 1/settimana \\
 		\hline 2 & PuntoDiPassaggio: inserimento & 1/mese \\
 		\hline 3 & AttraversamentoTeorico: inserimento & 1/giorno \\
