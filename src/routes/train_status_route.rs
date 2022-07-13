@@ -1,3 +1,4 @@
+use chrono::{Datelike, Utc};
 use rocket_dyn_templates::Template;
 use serde::Serialize;
 
@@ -14,6 +15,7 @@ pub async fn train_status(train_number: i32, db: crate::DbConn) -> Template {
     #[derive(Debug, Serialize)]
     struct Context {
         numero: i32,
+        num_days_from_ce: i32,
         categoria: String,
         ultimo_pdp_nome: Option<String>,
         ritardo: i16,
@@ -58,6 +60,7 @@ pub async fn train_status(train_number: i32, db: crate::DbConn) -> Template {
         .await;
     let context = Context {
         numero: train_number,
+        num_days_from_ce: Utc::now().num_days_from_ce(),
         categoria,
         ultimo_pdp_nome,
         ultimo_pdp_orario,
