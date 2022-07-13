@@ -74,16 +74,53 @@
 	\end{figure}
 	\par Il materiale rotabile viene suddiviso in locomotive e carrozze (fig. \ref{fig:loco}), lasciando eventualmente spazio ad altri tipi di materiale rotabile quali i carri merci.
 	\par Al contempo, si vuole differenziare la relazione fra una carrozza e una locomotiva, facendo in modo che ci possa essere solo una locomotiva per ogni convoglio (fig. \ref{fig:esercizio}). Per ottenere ciò viene aggiunta una entità chiamata \textit{Convoglio}, alla quale vengono messi in relazione una \textit{Locomotiva} e zero o più \textit{Carrozze}. Alla fine del raffinamento, viene sostituita la relazione fra \textit{Treno} e \textit{MaterialeRotabile} con una relazione fra \textit{Treno} e \textit{Convoglio} che a sua volta è collegato alle entità gerarchicamente figlie di \textit{Materiale rotabile}.
-	\begin{figure}[h]
+	\begin{figure}[h!]
 		\begin{center}
-			\includegraphics{res/schema/esercizio}
+			\includegraphics[scale=0.75]{res/schema/esercizio}
 		\end{center}
 		\caption{La relazione esercizio con le relative entità}
 		\label{fig:esercizio}
 	\end{figure}
-	\subsection{Entità}
+	\subsection{Entità \textit{PuntoDiPassaggio}}
+	\begin{figure}[h!]
+		\begin{center}
+			\includegraphics{res/schema/pdp}
+		\end{center}
+		\caption{Gerarchia sui punti di passaggio}
+		\label{fig:pdp}
+	\end{figure}
+	\begin{figure}[h!]
+		\begin{center}
+			\includegraphics[width=\linewidth]{res/schema/attraversamento}
+		\end{center}
+		\caption{La relazione \textit{Attraversamento} con le relative entità}
+		\label{fig:attraversamento}
+	\end{figure}
+	\par Per quanto riguarda l'entità \textit{PuntoDiPassaggio}, viene innanzitutto introdotta una gerarchia (fig. \ref{fig:pdp}), principalmente per modellare la fermata su uno specifico binario in una stazione.
+	\par Questa gerarchia ci consente anche di modellare gli scambi che, sebbene non abbiano particolare rilevanza in questo progetto, da la possibilità di controllare eventuali situazioni di pericolo in prossimità degli scambi e ottenere la lista di operazioni da effettuare su uno scambio per consentire la corretta configurazione della linea ferroviaria.
+	\par Inoltre, vengono introdotte due nuove relazioni (\textit{Concretizzazione} ed \textit{AttraversamentoTeorico}, fig. \ref{fig:attraversamento}).
+	\par La seconda ci permette di definire delle tabelle di marcia, ovvero contenenti solo gli orari di attraversamento di uno specifico punto di passaggio, mentre la prima fa sì che si possano definire dei gruppi di punti di passaggio, in modo da poter definire l'\textit{AttraversamentoTeorico} sul \textit{PuntoDiPassaggio} principale, mentre l'\textit{Attraversamento} avviene sui punti di passaggio secondari.
+	\par Questa suddivisione torna particolarmente utile quando un treno, che secondo l'orario dovrebbe arrivare a un binario, arriva su un binario diverso.
+	\subsection{Entità \textit{Persona}}
+	\begin{figure}[h!]
+		\begin{center}
+			\includegraphics{res/schema/persona}
+		\end{center}
+		\caption{Gerarchia su Persona}
+		\label{fig:persona}
+	\end{figure}
+	\begin{figure}[h!]
+		\begin{center}
+			\includegraphics[scale=.75]{res/schema/turno}
+		\end{center}
+		\caption{Le entità e le relazioni necessarie alla modellazione di un turno}
+		\label{fig:turno}
+	\end{figure}
+	\par Nel dominio applicativo, l'entità \textit{Persona} presente nello schema scheletro è sicuramente molto generica. Questo ci consente di introdurre una gerarchia (fig. \ref{fig:persona}) parziale che ci permetterebbe in futuro di modellare anche i biglietti comprati dai clienti.
+	\par In \textit{PersonaleDiBordo} viene a sua volta inserita una gerarchia, per poter distinguere fra i ruoli che una persona svolge.
+	\par Questo ci consente (fig. \ref{fig:turno}) di poter specificare il personale minimo e massimo su ogni treno.
 	\section{Schema concettuale finale}
-	\begin{figure}
+	\begin{figure}[h!]
 		\begin{center}
 			\includegraphics[angle=270,width=.95\linewidth]{res/schema/full}
 		\end{center}
