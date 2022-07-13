@@ -50,8 +50,11 @@
 	\par Oltre alla memorizzazione degli \textbf{\textit{orari di attraversamento}} teorico, viene richiesta la memorizzazione della \textbf{\textit{data e ora di partenza e di arrivo}} da un punto di passaggio, così da poter calcolare il ritardo del treno.
 	\par Un treno è poi composto da una \textbf{\textit{locomotiva}} (della quale ci interessa conoscere la velocità e la tensione di esercizio) e una serie di \textbf{\textit{carrozze}} (delle quali ci interessa memorizzare la classe (prima o seconda) e il numero di posti), che formano un \textbf{\textit{convoglio}}.
 	\par Su un treno prendono servizio un macchinista, un capotreno e, in certi casi, dei controllori.
-
-
+% ____                           _   _               _
+%|___ \  ___ ___  _ __   ___ ___| |_| |_ _   _  __ _| | ___
+%  __)  / __/ _ \| '_ \ / __/ _ | __| __| | | |/ _` | |/ _ \
+% / __/| (_| (_) | | | | (_|  __| |_| |_| |_| | (_| | |  __/
+%|_____ \___\___/|_| |_|\___\___|\__|\__|\__,_|\__,_|_|\___|
 	\chapter{Progettazione concettuale}
 	\par In questa situazione il dominio è specifico ed è spesso possibile trovare delle entità generiche che si concretizzano poi in entità più specifiche. Per questo motivo è utile utilizzare un approccio top-down per modellare al meglio l'architettura.
 	\section{Schema scheletro}
@@ -60,8 +63,32 @@
 		\caption{Schema scheletro}
 	\end{figure}
 	\section{Raffinamenti proposti}
-	\subsection{Entità ...}
+	\par Lo schema concettuale sarà sviluppato perfezionando tutte le entità nello schema scheletro. Per ogni entità si propone di seguito una vista esplosa, l’unione delle quali condurrà allo schema finale.
+	\subsection{Entità \textit{MaterialeRotabile}}
+	\begin{figure}[h]
+		\begin{center}
+			\includegraphics{res/schema/loco}
+		\end{center}
+		\caption{Gerarchia di MaterialeRotabile}
+		\label{fig:loco}
+	\end{figure}
+	\par Il materiale rotabile viene suddiviso in locomotive e carrozze (fig. \ref{fig:loco}), lasciando eventualmente spazio ad altri tipi di materiale rotabile quali i carri merci.
+	\par Al contempo, si vuole differenziare la relazione fra una carrozza e una locomotiva, facendo in modo che ci possa essere solo una locomotiva per ogni convoglio (fig. \ref{fig:esercizio}). Per ottenere ciò viene aggiunta una entità chiamata \textit{Convoglio}, alla quale vengono messi in relazione una \textit{Locomotiva} e zero o più \textit{Carrozze}. Alla fine del raffinamento, viene sostituita la relazione fra \textit{Treno} e \textit{MaterialeRotabile} con una relazione fra \textit{Treno} e \textit{Convoglio} che a sua volta è collegato alle entità gerarchicamente figlie di \textit{Materiale rotabile}.
+	\begin{figure}[h]
+		\begin{center}
+			\includegraphics{res/schema/esercizio}
+		\end{center}
+		\caption{La relazione esercizio con le relative entità}
+		\label{fig:esercizio}
+	\end{figure}
+	\subsection{Entità}
 	\section{Schema concettuale finale}
+	\begin{figure}
+		\begin{center}
+			\includegraphics[angle=270,width=.95\linewidth]{res/schema/full}
+		\end{center}
+		\caption{Schema concettuale}
+	\end{figure}
 	\chapter{Progettazione logica}
 	\section{Stima del volume dei dati}
 	\par Si ripoerao le stime dei volumi dei dati dopo un anno di operatività.
