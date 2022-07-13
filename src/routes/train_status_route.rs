@@ -7,8 +7,8 @@ pub async fn train_status(train_number: i32, db: crate::DbConn) -> Template {
     #[derive(Debug, Serialize)]
     struct Item {
         name: String,
-        scheduled_arrival: Option<chrono::NaiveDateTime>,
-        scheduled_departure: Option<chrono::NaiveDateTime>,
+        scheduled_arrival: Option<chrono::NaiveTime>,
+        scheduled_departure: Option<chrono::NaiveTime>,
         arrival: Option<chrono::NaiveDateTime>,
         departure: Option<chrono::NaiveDateTime>,
     }
@@ -22,19 +22,25 @@ pub async fn train_status(train_number: i32, db: crate::DbConn) -> Template {
         ultimo_pdp_orario: Option<chrono::NaiveDateTime>,
         items: Vec<Item>,
     }
-    let (ultimo_pdp_nome, ultimo_pdp_orario, ritardo) = db
+    let (ultimo_pdp_nome, ultimo_pdp_orario) = db
         .run(move |conn| {
-            conn.query("SELECT rpdp.ritardo AS r, rpdp.data AS orario, pdps.nome FROM RitardoPdP rpdp LEFT JOIN PdPStazione pdps on rpdp.idpdp = pdps.idpdp WHERE rpdp.numero = $1 ORDER BY orario DESC;", &[&train_number])
+            conn.query("SELECT rpdp.data AS orario, pdps.nome FROM RitardoPdP rpdp LEFT JOIN PdPStazione pdps on rpdp.idpdp = pdps.idpdp WHERE rpdp.numero = $1 ORDER BY orario DESC;", &[&train_number])
                 .unwrap()
         })
-        .await.iter().map(|x| (x.get("nome"),
-        {
-            let y: Option<chrono::NaiveDateTime> = x.get("orario");
-            y
-        }, {
-            let a: f64 = x.get("r");
-            a
-        } as i16)).find(|x| (x.1).is_some()).unwrap_or_default();
+        .await.iter().map(|x| (x.get("nome"),x.get::<_,Option<chrono::NaiveDateTime>>("orario"))).find(|x| (x.1).is_some()).unwrap_or_default();
+    let ritardo = db
+        .run(move |conn| {
+            conn.query(
+                "select ritardo from ritardotreno where numero = $1",
+                &[&train_number],
+            )
+            .unwrap()
+        })
+        .await
+        .iter()
+        .map(|x| x.get::<_, f64>(0) as i16)
+        .next()
+        .unwrap_or_default();
 
     let categoria = db
         .run(move |conn| {
@@ -67,19 +73,12 @@ pub async fn train_status(train_number: i32, db: crate::DbConn) -> Template {
         ritardo,
         items: cols
             .iter()
-            .map(|col| {
-                let orario_arrivo: Option<chrono::NaiveDateTime> = col.get("OrarioArrivo");
-                let orario_partenza: Option<chrono::NaiveDateTime> = col.get("OrarioPartenza");
-                let data_arrivo: Option<chrono::NaiveDateTime> = col.get("DataArrivo");
-                let data_partenza: Option<chrono::NaiveDateTime> = col.get("DataPartenza");
-                let nome: String = col.get("Nome");
-                Item {
-                    name: nome,
-                    scheduled_arrival: orario_arrivo,
-                    scheduled_departure: orario_partenza,
-                    arrival: data_arrivo,
-                    departure: data_partenza,
-                }
+            .map(|col| Item {
+                name: col.get("Nome"),
+                scheduled_arrival: col.get("OrarioArrivo"),
+                scheduled_departure: col.get("OrarioPartenza"),
+                arrival: col.get("DataArrivo"),
+                departure: col.get("DataPartenza"),
             })
             .collect(),
     };

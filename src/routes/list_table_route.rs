@@ -8,12 +8,12 @@ pub async fn list_table(
     c: Option<String>,
     db: crate::DbConn,
 ) -> Option<Template> {
-    #[derive(Debug, Serialize)]
+    #[derive(Debug, Serialize, Clone)]
     struct Column {
         name: String,
         sql_type: String,
     }
-    #[derive(Debug, Serialize)]
+    #[derive(Debug, Serialize, Clone)]
     struct Table {
         name: String,
         cols: Vec<Column>,
@@ -37,32 +37,52 @@ pub async fn list_table(
             Column {name:column_name, sql_type: col.get("data_type") }
         })
         .collect();
+    let cols1 = cols.clone();
 
     let data = db
         .run(move |conn| {
             if let Some((q, c)) = q.zip(c) {
                 conn.query(
                     &format!(
-                        "SELECT * FROM {} WHERE LOWER({}::varchar(255)) LIKE $1",
-                        tname2, c
+                        "SELECT {} FROM {} WHERE LOWER({}::varchar(255)) LIKE $1",
+                        cols1
+                            .iter()
+                            .map(|x| format!("{}::varchar(255)", x.name))
+                            .collect::<Vec<String>>()
+                            .join(","),
+                        tname2,
+                        c
                     ),
                     &[&format!("%{}%", q.to_lowercase())],
                 )
                 .unwrap()
             } else {
-                conn.query(&format!("SELECT * FROM {}", tname2), &[])
-                    .unwrap()
+                conn.query(
+                    &format!(
+                        "SELECT {} FROM {}",
+                        cols1
+                            .iter()
+                            .map(|x| format!("{}::varchar(255)", x.name))
+                            .collect::<Vec<String>>()
+                            .join(","),
+                        tname2
+                    ),
+                    &[],
+                )
+                .unwrap()
             }
         })
         .await
         .iter()
         .map(|x| {
             cols.iter()
-                .map(|y| crate::utils::get_sql(x, y.name.as_str()))
+                .map(|y| {
+                    x.get::<_, Option<String>>(y.name.as_str())
+                        .unwrap_or_default()
+                })
                 .collect()
         })
         .collect();
-
     let context = Table {
         name: tablename,
         cols,
