@@ -13,7 +13,7 @@
 <tr>
 {% for row in rows %}
 <tr>
-<td>{{row.categoria}} {{row.numero_treno}}</td>
+<td><a href="/train_status/{{row.numero_treno}}">{{row.categoria}} {{row.numero_treno}}</a></td>
 <td>{{row.destinazione}}</td>
 <td>{{row.orario}}</td>
 <td>{{row.binario}}</td>
