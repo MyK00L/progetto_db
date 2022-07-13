@@ -20,7 +20,7 @@ Non partito
     <p><em>Partenza effettiva:</em> {%if item.departure%}{{item.departure | date(format="%H:%M")}}{%endif%}</p>
 </section>
 {% endfor %}
-<a href="/train_composition/{{number}}/{{num_days_from_ce}}">composizione treno</a>
+<a href="/train_composition/{{numero}}/{{num_days_from_ce}}">composizione treno</a>
 </main>
 
 <style>
