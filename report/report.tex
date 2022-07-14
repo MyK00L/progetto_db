@@ -226,7 +226,7 @@
 	\subsection{Viste utilizzate per l'esecuzione delle queries}
 	\begin{minted}{postgres}
 CREATE OR REPLACE VIEW RitardoPdP AS
-    SELECT at.OrarioArrivo, at.OrarioPartenza, at.idpdp
+    SELECT at.OrarioArrivo, at.OrarioPartenza, at.idpdp,
         a.DataArrivo, a.DataPartenza,
         categoria, numero,
         (CURRENT_DATE + COALESCE(OrarioPartenza, OrarioArrivo)) AS orario,
