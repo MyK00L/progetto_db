@@ -24,7 +24,7 @@ pub async fn train_status(train_number: i32, db: crate::DbConn) -> Option<Templa
     }
     let (ultimo_pdp_nome, ultimo_pdp_orario) = db
         .run(move |conn| {
-            conn.query("SELECT rpdp.data AS orario, pdps.nome FROM RitardoPdP rpdp LEFT JOIN PdPStazione pdps on rpdp.idpdp = pdps.idpdp WHERE rpdp.numero = $1 ORDER BY orario DESC;", &[&train_number])
+            conn.query("SELECT rpdp.data AS orario, pdpa.nome FROM RitardoPdP rpdp LEFT JOIN PuntoDiPassaggioAstratto pdpa on rpdp.idpdp = pdpa.idpdp WHERE rpdp.numero = $1 ORDER BY orario DESC;", &[&train_number])
                 .unwrap()
         })
         .await.iter().map(|x| (x.get("nome"),x.get::<_,Option<chrono::NaiveDateTime>>("orario"))).find(|x| (x.1).is_some()).unwrap_or_default();
@@ -58,7 +58,7 @@ pub async fn train_status(train_number: i32, db: crate::DbConn) -> Option<Templa
         .run(move |conn| {
             conn
         .query(
-            "SELECT OrarioArrivo, OrarioPartenza, DataArrivo, DataPartenza, Nome FROM PdPStazione, RitardoPdP WHERE RitardoPdP.numero = $1 AND RitardoPdP.idpdp = PdPStazione.IDPdP ORDER BY OrarioArrivo",
+            "SELECT OrarioArrivo, OrarioPartenza, DataArrivo, DataPartenza, Nome FROM PuntoDiPassaggioAstratto, RitardoPdP WHERE RitardoPdP.numero = $1 AND RitardoPdP.idpdp = PuntoDiPassaggioAstratto.id ORDER BY OrarioArrivo",
             &[&train_number],
         ).unwrap()
         })
