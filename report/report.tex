@@ -5,6 +5,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage{pdfpages}
 \restylefloat{table}
 %\usepackage[style=numeric-comp]{biblatex}
 
@@ -190,25 +191,29 @@
 	\section{Schemi di navigazione e tabelle degli accessi}
 	\subsection{Schemi di navigazione}
 	\subsection{Tabella degli accessi}
+	\par I costi totali sono da intendere su base giornaliera. Nella colonna del numero del costo totale, si
+	calcolano gli accessi in scrittura con peso doppio rispetto agli accessi in lettura. Per evitare di
+	appesantire la notazione, si riportano dati intermedi e finali approssimati, seppur mantenendo
+	precisione durante la fase di calcolo.
+	\includepdf{res/accessi.pdf}
 	\section{Raffinamento dello schema (eliminazione di identificatori esterni, attributi composti e gerarchie, scelta delle chiavi)}
 	\subsection{Eliminazione delle gerarchie}
 	\subsection{Attributi composti}
 	\subsection{Scelta delle chiavi primarie}
 	\subsection{Chiavi esterne}
 	\subsection{Vincoli di gruppo}
-	\subsection{Accorgimenti}
 	\section{Analisi delle ridondanze}
 	\section{Traduzione di entità e associazioni in relazioni}
+	
 	\section{Schema relazionale finale}
 	\begin{figure}[h!]
-		\begin{center}
-			\includegraphics[width=.95\linewidth]{res/schema/logico}
-		\end{center}
+		\includegraphics[width=.95\linewidth]{res/schema/logico}
 		\caption{Schema relazionale finale}
 	\end{figure}
 	\section{Traduzione delle operazioni in query SQL}
-	\chapter{Progettazione dell'applicazione}
 	
+
+	\chapter{Progettazione dell'applicazione}
 	\section{Descrizione dell'architettura dell'applicazione realizzata}
 	\par Si sviluppa un interfaccia web per la gestione del sistema, sviluppata utilizzando il framework Bootstrap e l'approccio \textit{mobile-first}.
 	\par Il linguaggio usato per il webserver che gestisce le richieste dell'interfaccia è il Rust.
