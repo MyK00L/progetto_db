@@ -8,7 +8,6 @@
 <th>Treno</th>
 <th>Destinazione</th>
 <th>Orario</th>
-<th>Binario</th>
 <th>Ritardo</th>
 <tr>
 {% for row in rows %}
@@ -16,7 +15,6 @@
 <td><a href="/train_status/{{row.numero_treno}}">{{row.categoria}} {{row.numero_treno}}</a></td>
 <td>{{row.destinazione}}</td>
 <td>{{row.orario}}</td>
-<td>{{row.binario}}</td>
 <td>{{row.ritardo}}</td>
 </tr>
 {% endfor %}
