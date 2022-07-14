@@ -290,9 +290,9 @@ select * from composizione where idtreno = $1 and data = $2;
 SELECT * FROM Esercizio
     JOIN Locomotiva ON Esercizio.idLocomotiva = Locomotiva.ID
     WHERE Esercizio.idTreno = $1 AND data = $2;
-	\end{minted}{postgres}
+	\end{minted}
 	\subsection{Punti di passaggio attraversati da un treno}
-	\begin{minted}
+	\begin{minted}{postgres}
 SELECT rpdp.data AS orario, pdpa.nome FROM RitardoPdP rpdp
     LEFT JOIN PuntoDiPassaggioAstratto pdpa on rpdp.idpdp = pdpa.idpdp
     WHERE rpdp.numero = $1 ORDER BY orario DESC
