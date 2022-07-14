@@ -20,10 +20,10 @@ fn rocket() -> _ {
         "ROCKET_DATABASES",
         format!(
             "{{database = {{ url = \"postgres://{}:{}@{}/{}\" }}}}",
-            std::env::var("DB_USER").unwrap(),
-            std::env::var("DB_PASSWORD").unwrap(),
-            std::env::var("DB_HOST").unwrap(),
-            std::env::var("DB_NAME").unwrap(),
+            std::env::var("DB_USER").expect("DB_USER not found in environment"),
+            std::env::var("DB_PASSWORD").expect("DB_PASSWORD not found in environment"),
+            std::env::var("DB_HOST").expect("DB_HOST not found in environment"),
+            std::env::var("DB_NAME").expect("DB_NAME not found in environment"),
         ),
     );
     rocket::build()

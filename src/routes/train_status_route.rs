@@ -3,7 +3,7 @@ use rocket_dyn_templates::Template;
 use serde::Serialize;
 
 #[get("/train_status/<train_number>")]
-pub async fn train_status(train_number: i32, db: crate::DbConn) -> Template {
+pub async fn train_status(train_number: i32, db: crate::DbConn) -> Option<Template> {
     #[derive(Debug, Serialize)]
     struct Item {
         name: String,
@@ -53,8 +53,7 @@ pub async fn train_status(train_number: i32, db: crate::DbConn) -> Template {
         .await
         .iter()
         .map(|col| col.get("Categoria"))
-        .next()
-        .unwrap();
+        .next()?;
     let cols = db
         .run(move |conn| {
             conn
@@ -82,5 +81,5 @@ pub async fn train_status(train_number: i32, db: crate::DbConn) -> Template {
             })
             .collect(),
     };
-    Template::render("train_status", &context)
+    Some(Template::render("train_status", &context))
 }
