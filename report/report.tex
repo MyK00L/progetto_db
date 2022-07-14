@@ -226,32 +226,33 @@
 	\subsection{Viste utilizzate per l'esecuzione delle queries}
 	\begin{minted}{postgres}
 CREATE OR REPLACE VIEW RitardoPdP AS
-    SELECT at.OrarioArrivo, at.OrarioPartenza, at.idpdp,
-        a.DataArrivo, a.DataPartenza,
-        categoria, numero,
-        (CURRENT_DATE + COALESCE(OrarioPartenza, OrarioArrivo)) AS orario,
-        COALESCE(datapartenza, dataarrivo) as `data`,
-        GREATEST(0, EXTRACT(EPOCH FROM (
-            COALESCE(
-                a.datapartenza AT TIME ZONE 'Europe/Rome',
-                a.dataarrivo AT TIME ZONE 'Europe/Rome', NOW())
-            ) - (
-                CURRENT_DATE + COALESCE(
-                    at.OrarioPartenza, at.OrarioArrivo
-                )
-            ) AT TIME ZONE 'Europe/Rome') / 60) AS ritardo
-        FROM treno
-        JOIN attraversamentoteorico at on treno.numero = at.idtreno
-        JOIN puntodipassaggioastratto pdpa on at.idpdp = pdpa.id
-        JOIN puntodipassaggio pdp on pdpa.id = pdp.idastratto
-        LEFT OUTER JOIN (
-            SELECT * FROM attraversamento WHERE COALESCE(
-                datapartenza, dataarrivo
-            )::date = now()::date) a
-            on treno.numero = a.idtreno
-            AND a.idtreno = at.idtreno
-            AND a.idpdp = pdp.id
-            AND pdpa.id = pdp.idastratto;
+SELECT at.OrarioArrivo,
+       at.OrarioPartenza,
+       a.DataArrivo,
+       a.DataPartenza,
+       categoria,
+       numero,
+       at.idpdp,
+       (CURRENT_DATE + COALESCE(OrarioPartenza, OrarioArrivo))   AS orario,
+       COALESCE(datapartenza, dataarrivo)                        as data,
+       GREATEST(0, EXTRACT(EPOCH FROM
+                           (COALESCE(a.datapartenza, a.dataarrivo, NOW())
+                               AT TIME ZONE 'Europe/Rome') -
+                           (CURRENT_DATE + COALESCE(at.OrarioPartenza,
+                                                    at.OrarioArrivo))
+                               AT TIME ZONE 'Europe/Rome') / 60) AS ritardo
+FROM treno
+         JOIN attraversamentoteorico at on treno.numero = at.idtreno
+         JOIN puntodipassaggioastratto pdpa on at.idpdp = pdpa.id
+         JOIN puntodipassaggio pdp on pdpa.id = pdp.idastratto
+         LEFT OUTER JOIN (
+    SELECT *
+    FROM attraversamento
+    WHERE COALESCE(datapartenza, dataarrivo)::date = now()::date) a
+                         ON Treno.numero = a.idtreno
+                             AND a.idtreno = at.idtreno
+                             AND a.idpdp = pdp.id
+                             AND pdpa.id = pdp.idastratto;
 
 CREATE OR REPLACE VIEW RitardoTreno AS
     SELECT DISTINCT LAST_VALUE(ritardo)
