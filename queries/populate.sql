@@ -33,11 +33,11 @@ insert into carrozza (id, classe, posti) values('c10000000001',2,30);
 insert into carrozza (id, classe, posti) values('c10000000002',2,30);
 insert into carrozza (id, classe, posti) values('c10000000003',2,30);
 insert into carrozza (id, classe, posti) values('c10000000004',2,30);
-insert into convoglio (1,'c10000000000');
-insert into convoglio (1,'c10000000001');
-insert into convoglio (1,'c10000000002');
-insert into convoglio (1,'c10000000003');
-insert into convoglio (1,'c10000000004');
+insert into convoglio (id,idcarrozza) values (1,'c10000000000');
+insert into convoglio (id,idcarrozza) values (1,'c10000000001');
+insert into convoglio (id,idcarrozza) values (1,'c10000000002');
+insert into convoglio (id,idcarrozza) values (1,'c10000000003');
+insert into convoglio (id,idcarrozza) values (1,'c10000000004');
 
 insert into locomotiva (id, velocita, tensione) values ('l20000000000',180,'CC');
 insert into carrozza (id, classe, posti) values('c20000000000',1,30);
@@ -45,11 +45,11 @@ insert into carrozza (id, classe, posti) values('c20000000001',2,30);
 insert into carrozza (id, classe, posti) values('c20000000002',2,30);
 insert into carrozza (id, classe, posti) values('c20000000003',2,30);
 insert into carrozza (id, classe, posti) values('c20000000004',2,30);
-insert into convoglio (2,'c20000000000');
-insert into convoglio (2,'c20000000001');
-insert into convoglio (2,'c20000000002');
-insert into convoglio (2,'c20000000003');
-insert into convoglio (2,'c20000000004');
+insert into convoglio (id,idcarrozza) values (2,'c20000000000');
+insert into convoglio (id,idcarrozza) values (2,'c20000000001');
+insert into convoglio (id,idcarrozza) values (2,'c20000000002');
+insert into convoglio (id,idcarrozza) values (2,'c20000000003');
+insert into convoglio (id,idcarrozza) values (2,'c20000000004');
 
 /* esercizio */
 insert into esercizio (idconvoglio, idtreno, idlocomotiva, data) values (1,1,'l10000000000','2022-07-14');
