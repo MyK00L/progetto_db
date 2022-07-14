@@ -192,7 +192,16 @@
 	\subsection{Tabella degli accessi}
 	\section{Raffinamento dello schema (eliminazione di identificatori esterni, attributi composti e gerarchie, scelta delle chiavi)}
 	\subsection{Eliminazione delle gerarchie}
+	\begin{itemize}
+		\item \textit{MaterialeRotabile}: si decide di collassare la gerarchia verso il basso,
+		\item \textit{PuntoDiPassaggio}: si decide di collassare la gerarchia con una soluzione intermedia:
+			si decide di rinominare l'entit\`a \textit{Stazione} in \textit{PDPStazione} per modellare l'attraversamento di differenti binari di una stazione.
+			Al contrario, le entit\`a \textit{Scambio} e \textit{Semplice} vengono modellate aggiungendo un attributo \textit{Tipo} al \textit{PuntoDiPassaggio}. Se il valore di \textit{Tipo} \`e \textit{Stazione}, allora sar\`a possibile reperire le informazioni sul binario consultando la tabella \textit{PdPStazione}.
+		\item \textit{Persona}: si decide di collassare la gerarchia verso l'alto, il ruolo diventa un attributo della persona e viene usata la relazione \textit{Turno} per collegarla al \textit{Treno}.
+		\item \textit{PersonaleDiBordo}: si decide di collassare la gerarchia insieme a \textit{Persona}, facendo cos\`i togliamo la possibilit\`a di modellare altri tipi di persone, che non siano personale di bordo.
+	\end{itemize}
 	\subsection{Attributi composti}
+	\par In fase di progettazione concettuale non sono stati rilevati attributi composti.
 	\subsection{Scelta delle chiavi primarie}
 	\subsection{Chiavi esterne}
 	\subsection{Vincoli di gruppo}
@@ -202,7 +211,7 @@
 	\section{Schema relazionale finale}
 	\begin{figure}[h!]
 		\begin{center}
-			\includegraphics[width=.95\linewidth]{res/schema/logico}
+			\includegraphics[width=\linewidth]{res/schema/logico}
 		\end{center}
 		\caption{Schema relazionale finale}
 	\end{figure}
