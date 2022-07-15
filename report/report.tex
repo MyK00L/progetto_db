@@ -5,8 +5,10 @@
 \usepackage[T1]{fontenc}
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage{longtable}
 \usepackage{minted}
 \usepackage{pdfpages}
+\usepackage{supertabular}
 \restylefloat{table}
 %\usepackage[style=numeric-comp]{biblatex}
 
@@ -19,7 +21,7 @@
 	\chapter{Analisi dei requisiti}
 	\section{Intervista}
 	\par RFS (Rete Ferroviaria dello Stato) richiede la realizzazione di un sistema informativo in grado di monitorare la marcia e la programmazione dei treni e la gestione dei turni del personale di bordo. Viene richiesta la possibilità di operare tramite interfaccia web, in modo da essere indipendenti dalle piattaforme utilizzate.
-	\par Un treno è uno specifico viaggio su una relazione, ovvero l'attraversamento sequenziale di una serie di punti di passaggio (scambi, stazioni, o semplici) in orari predeterminati.
+	\par Un treno è uno specifico viaggio su una linea ferroviaria, ovvero l'attraversamento sequenziale di una serie di punti di passaggio (scambi, stazioni, o semplici) in orari predeterminati.
 	\par Oltre alla memorizzazione degli orari di attraversamento teorici, viene richiesta la memorizzazione della data e ora di partenza e di arrivo da un punto di passaggio, così da poter calcolare il ritardo del treno.
 	\par Un treno è poi composto da una locomotiva (della quale ci interessa conoscere la velocità e la tensione di esercizio) e una serie di carrozze (delle quali ci interessa memorizzare la classe e il numero di posti), che formano un convoglio.
 	\par Su un treno prendono servizio un macchinista, un capotreno e, in certi casi, dei controllori.
@@ -31,14 +33,15 @@
 	\par Un treno è poi composto da una locomotiva (della quale ci interessa conoscere la velocità e la tensione di esercizio) e una serie di carrozze (delle quali ci interessa memorizzare la classe\textsuperscript{4} e il numero di posti), che formano un convoglio.
 	\par Su un treno prendono servizio un macchinista, un capotreno e, in certi casi, dei controllori.
 
-	\begin{tabular}{|p{1cm}|p{3cm}|p{4cm}|p{4cm}|}
+	\begin{longtable}{|p{1cm}|p{3cm}|p{4cm}|p{4cm}|}
 		\hline
 		\textbf{N} & \textbf{Espressione} & \textbf{Sostituzione} & \textbf{Motivazione} \\ \hline
+		\endhead
 		1 & Operare & Interagire con il sistema & Esplicitato il concetto  \\ \hline
 		2 & Punti di passaggio & rappresentati nel mondo fisico da eurobalise & specificato il significato \\ \hline
 		3 & Semplici & in tutti gli altri casi & specificato il significato \\ \hline
 		4 & classe & classe (prima o seconda) & specificato il significato \\ \hline
-	\end{tabular}
+	\end{longtable}
 
 	\subsection{Dopo la correzione delle ambiguità}
 	\par RFS (Rete Ferroviaria dello Stato) richiede la realizzazione di un sistema informativo in grado di monitorare la marcia e la programmazione dei treni e la gestione dei turni del personale di bordo. Viene richiesta la possibilità di interagire con il sistema tramite interfaccia web, in modo da essere indipendenti dalle piattaforme utilizzate.
@@ -51,9 +54,9 @@
 	\par Si individuano le parole chiave che permetteranno di costruire un primo schema scheletro del progetto. In seguito sarà poi raffinato per ottenere lo schema definitivo. I termini essenziali sono evidenziati in grassetto e in corsivo.
 	\par RFS (Rete Ferroviaria dello Stato) richiede la realizzazione di un sistema informativo in grado di monitorare la marcia e la programmazione dei treni e la gestione dei turni del personale di bordo. Viene richiesta la possibilità di interagire con il sistema tramite interfaccia web, in modo da essere indipendenti dalle piattaforme utilizzate.
 	\par Un \textbf{\textit{treno}} è uno specifico viaggio su una linea ferroviaria, ovvero l'attraversamento sequenziale di una serie di \textbf{\textit{punti di passaggio}}, rappresentati nel mondo fisico da eurobalise (scambi, stazioni, o semplici, in tutti gli altri casi) in orari predeterminati.
-	\par Oltre alla memorizzazione degli \textbf{\textit{orari di attraversamento}} teorico, viene richiesta la memorizzazione della \textbf{\textit{data e ora di partenza e di arrivo}} da un punto di passaggio, così da poter calcolare il ritardo del treno.
-	\par Un treno è poi composto da una \textbf{\textit{locomotiva}} (della quale ci interessa conoscere la velocità e la tensione di esercizio) e una serie di \textbf{\textit{carrozze}} (delle quali ci interessa memorizzare la classe (prima o seconda) e il numero di posti), che formano un \textbf{\textit{convoglio}}.
-	\par Su un treno prendono servizio un macchinista, un capotreno e, in certi casi, dei controllori.
+	\par Oltre alla memorizzazione degli orari di attraversamento teorico, viene richiesta la memorizzazione della data e ora di partenza e di arrivo da un punto di passaggio, così da poter calcolare il ritardo del treno.
+	\par Un treno è poi composto da una \textbf{\textit{locomotiva}} (della quale ci interessa conoscere la velocità e la tensione di esercizio) e una serie di \textbf{\textit{carrozze}} (delle quali ci interessa memorizzare la classe (prima o seconda) e il numero di posti), che formano un convoglio.
+	\par Su un treno prendono servizio un \textbf{\textit{macchinista}}, un \textbf{\textit{capotreno}} e, in certi casi, dei \textbf{\textit{controllori}}.
 % ____                           _   _               _
 %|___ \  ___ ___  _ __   ___ ___| |_| |_ _   _  __ _| | ___
 %  __)  / __/ _ \| '_ \ / __/ _ | __| __| | | |/ _` | |/ _ \
@@ -133,11 +136,11 @@
 	\chapter{Progettazione logica}
 	\section{Stima del volume dei dati}
 	\par Si ripoerao le stime dei volumi dei dati dopo un anno di operatività.
-	\begin{table}[H]
-	\centering
-	\begin{tabular}{|l|l|l|}
+	%\begin{table}[H]
+	%\centering
+	\begin{longtable}{|l|l|l|}
 		\hline \textbf{Nome} & \textbf{Tipo} & \textbf{Volume} \\
-		\hline Treno & E & 30000 \\
+		\hline \endhead Treno & E & 30000 \\
 		\hline PuntoDiPassaggio & E & 10000 \\
 		\hline Stazione & E & 1000 \\
 		\hline Semplice & E & 6000 \\
@@ -161,15 +164,15 @@
 		\hline Convoglio & E & 20000 \\
 		\hline Esercizio & R & 10950000 \\
 		\hline
-	\end{tabular}
-	\end{table}
+	\end{longtable}
+	%\end{table}
 	\section{Descrizione delle operazioni principali e stima della loro frequenza}
 	Di seguito si riportano le operazioni effettuate e la stima della loro frequenza dopo un anno di operatività.
-	\begin{table}[H]
-	\centering
-	\begin{tabular}{|l|l|l|}
+	%\begin{table}[H]
+	%\centering
+	\begin{longtable}{|l|l|l|}
 		\hline \textbf{N} & \textbf{Descrizione} & \textbf{Frequenza} \\
-		\hline 1 & Treno: inserimento & 1/settimana \\
+		\hline \endhead 1 & Treno: inserimento & 1/settimana \\
 		\hline 2 & PuntoDiPassaggio: inserimento & 1/mese \\
 		\hline 3 & AttraversamentoTeorico: inserimento & 1/giorno \\
 		\hline 4 & Attraversamento: inserimento & 9000000/giorno \\
@@ -187,10 +190,36 @@
 		\hline 16 & Composizione treno: interrogazione & 50000/giorno \\
 		\hline 17 & Turni persona: interrogazione & 100000/giorno \\
 		\hline
-	\end{tabular}
-	\end{table}
+	\end{longtable}
+	%\end{table}
 	\section{Schemi di navigazione e tabelle degli accessi}
 	\subsection{Schemi di navigazione}
+	\par Di seguito vengono riportati gli schemi di navigazione per le query più frequenti.
+	\par Tutte le interrogazioni partono da \textit{Treno}, essendo riferite all'omonima entità.
+	\begin{figure}[H]
+		\begin{center}
+		\includegraphics[width=.65\linewidth]{res/accesso/ritardo}
+		\end{center}
+		\caption{Ritardo di un treno}
+	\end{figure}
+	\begin{figure}[H]
+		\begin{center}
+		\includegraphics[width=.65\linewidth]{res/accesso/percorso}
+		\end{center}
+		\caption{Percorso di un treno, treni passanti da una stazione}
+	\end{figure}
+	\begin{figure}[H]
+		\begin{center}
+		\includegraphics[width=.55\linewidth]{res/accesso/composizione}
+		\end{center}
+		\caption{Carrozze e locomotive di un treno}
+	\end{figure}
+	\begin{figure}[H]
+		\begin{center}
+		\includegraphics[width=\linewidth]{res/accesso/turni}
+		\end{center}
+		\caption{Turni di una persona}
+	\end{figure}
 	\subsection{Tabella degli accessi}
 	\par I costi totali sono da intendere su base giornaliera. Nella colonna del numero del costo totale, si
 	calcolano gli accessi in scrittura con peso doppio rispetto agli accessi in lettura. Per evitare di
@@ -210,13 +239,57 @@
 	\subsection{Attributi composti}
 	\par In fase di progettazione concettuale non sono stati rilevati attributi composti.
 	\subsection{Scelta delle chiavi primarie}
+	\par Le chiavi primarie sono state scelte per ogni entità dello schema concettuale, tranne che per \textit{Convoglio}, essendo quest'ultima diventata un raggruppamento di carrozze che richiede la l'assegnazione di un identificativo ad un gruppo di carrozze. Per quanto riguarda le relazioni non sono state scelte chiavi primarie.
 	\subsection{Chiavi esterne}
+	\begin{itemize}
+		\item \textit{PuntoDiPassaggio}: importa la chiave \textit{ID} da \textit{PuntoDiPassaggioAstratto} con ridenominazione \textit{IDAstratto}.
+		\item \textit{AttraversamentoTeorico}: importa la chiave \textit{Numero} da \textit{Treno} con ridenominazione \textit{IDTreno} e la chiave \textit{ID} da \textit{PuntoDiPassaggio} con ridenominazione \textit{IDPdP}.
+		\item \textit{Attraversamento}: importa la chiave \textit{Numero} da \textit{Treno} con ridenominazione \textit{IDTreno} e la chiave \textit{ID} da \textit{PuntoDiPassaggio} con ridenominazione \textit{IDPdP}.
+		\item \textit{PdPStazione}: importa la chiave \textit{ID} da \textit{PuntoDiPassaggio} con ridenominazione \textit{IDPdP}.
+		\item \textit{Turno}: importa la chiave \textit{ID} da \textit{Persona} con ridenominazione \textit{IDPersona} e la chiave \textit{Numero} da \textit{Treno} con ridenominazione \textit{IDTreno}.
+		\item \textit{Convoglio}: importa la chiave \textit{ID} da \textit{Carrozza} con ridenominazione \textit{IDCarrozza}.
+		\item \textit{Esercizio}: importa la chiave \textit{Numero} da \textit{Treno} con ridenominazione \textit{IDTreno} e la chiave \textit{ID} da \textit{Locomotiva} con ridenominazione \textit{IDLocomotiva}.
+	\end{itemize}
 	\subsection{Vincoli di gruppo}
+	\begin{itemize}
+		\item Su \textit{Attraversamento}, \textit{AttraversamentoTeorico}, \textit{Convoglio}e \textit{Turno} è stato inserito un vincolo di unicità sulle tuple;
+		\item Su \textit{Esercizio} è stato inserito un vincolo di unicità su (\textit{IDTreno}, \textit{Data})
+	\end{itemize}
 	\section{Analisi delle ridondanze}
+	\par Seppure il costo delle operazioni più comuni abbia un forte impatto sul DB, ciò è dovuto principalmente all'elevata mole di richieste che dovrà gestire il sistema, più che alle operazioni stesse.
+	\par Per questo motivo non si ritiene necessario l'aggiunta di attributi o relazioni ridondanti.
+	\par Si è invece scelto di convertire il tipo del campo \texttt{Nome} nella tabella \\ \texttt{PuntoDiPassaggioAstratto} in \texttt{VARCHAR(50)} da \texttt{TEXT}, in modo da poter aggiungere un indice per velocizzare le operazioni di ricerca delle stazioni.
+	\par Ciò comporta un aumento del carico di lavoro durante gli inserimenti, ritenuto però trascurabile visto l'impatto che essi hanno sul totale del carico di lavoro della base di dati.
 	\section{Traduzione di entità e associazioni in relazioni}
+	Di seguito vengono elencate le relazioni finali:
+	\begin{itemize}
+		\item \textbf{Treno}(\underline{Numero}, Categoria)
+		\item \textbf{PuntoDiPassaggioAstratto}(\underline{ID}, Nome*)
+		\item \textbf{PuntoDiPassaggio}(\underline{ID}, IDAstratto, Latitudine, Longitudine, Tipo)\\
+			FK: IDAstratto REFERENCES \textbf{PuntoDiPassaggioAstratto}
+		\item \textbf{AttraversamentoTeorico}(\underline{IDTreno}, \underline{IDPdP}, \underline{OrarioArrivo}*, \underline{OrarioPartena}*)\\
+			FK: IDTreno REFERENCES \textbf{Treno}\\
+			FK: IDPdP REFERENCES \textbf{PuntoDiPassaggioAstratto}
+		\item \textbf{Attraversamento}(\underline{IDTreno}, \underline{IDPdP}, \underline{OrarioArrivo}*, \underline{OrarioPartena}*)\\
+			FK: IDTreno REFERENCES \textbf{Treno}\\
+			FK: IDPdP REFERENCES \textbf{PuntoDiPassaggio}
+		\item \textbf{PdPStazione}(\underline{ID}, IDPdP, Binario)\\
+			FK: IDPdP REFERENCES \textbf{PuntoDiPassaggio}
+		\item \textbf{Persona}(\underline{ID}, Nome, Cognome, Ruolo)
+		\item \textbf{Turno}(\underline{IDPersona}, \underline{IDTreno}, \underline{Data})\\
+			FK: IDPersona REFERENCES \textbf{Persona}\\
+			FK: IDTreno REFERENCES \textbf{Treno}
+		\item \textbf{Locomotiva}(\underline{ID}, Velocita, Tensione)
+		\item \textbf{Carrozza}(\underline{ID}, Classe, Posti)
+		\item \textbf{Convoglio}(\underline{ID}, \underline{IDCarrozza})\\
+			FK: IDCarrozza REFERENCES \textbf{Carrozza}
+		\item \textbf{Esercizio}(\underline{IDTreno}, \underline{Data}, IDLocomotiva, IDConvoglio)\\
+			FK: IDTreno REFERENCES \textbf{Treno}\\
+			FK: IDLocomotiva REFERENCES \textbf{Locomotiva}
+	\end{itemize}
 	
 	\section{Schema relazionale finale}
-	\begin{figure}[h!]
+	\begin{figure}[H]
 		\begin{center}
 			\includegraphics[width=\linewidth]{res/schema/logico}
 		\end{center}
@@ -227,64 +300,64 @@
 	\begin{minted}{postgres}
 CREATE OR REPLACE VIEW RitardoPdP AS
 SELECT at.OrarioArrivo,
-       at.OrarioPartenza,
-       a.DataArrivo,
-       a.DataPartenza,
-       categoria,
-       numero,
-       at.idpdp,
-       (CURRENT_DATE + COALESCE(OrarioPartenza, OrarioArrivo))   AS orario,
-       COALESCE(datapartenza, dataarrivo)                        as data,
-       GREATEST(0, EXTRACT(EPOCH FROM
-                           (COALESCE(a.datapartenza, a.dataarrivo, NOW())
-                               AT TIME ZONE 'Europe/Rome') -
-                           (CURRENT_DATE + COALESCE(at.OrarioPartenza,
-                                                    at.OrarioArrivo))
-                               AT TIME ZONE 'Europe/Rome') / 60) AS ritardo
-FROM treno
-         JOIN attraversamentoteorico at on treno.numero = at.idtreno
-         JOIN puntodipassaggioastratto pdpa on at.idpdp = pdpa.id
-         JOIN puntodipassaggio pdp on pdpa.id = pdp.idastratto
-         LEFT OUTER JOIN (
+  at.OrarioPartenza,
+  a.DataArrivo,
+  a.DataPartenza,
+  Categoria,
+  Numero,
+  at.IDPdP,
+  (CURRENT_DATE + COALESCE(OrarioPartenza, OrarioArrivo))   AS Orario,
+  COALESCE(datapartenza, dataarrivo)                        as Data,
+  GREATEST(0, EXTRACT(EPOCH FROM
+                      (COALESCE(a.DataPartenza, a.DataArrivo, NOW())
+                          AT TIME ZONE 'Europe/Rome') -
+                      (CURRENT_DATE + COALESCE(at.OrarioPartenza,
+                                               at.OrarioArrivo))
+                          AT TIME ZONE 'Europe/Rome') / 60) AS Ritardo
+FROM Treno
+    JOIN AttraversamentoTeorico at ON Treno.Numero = at.IDTreno
+    JOIN PuntoDiPassaggioAstratto pdpa ON at.IDPdP = pdpa.ID
+    JOIN PuntoDiPassaggio pdp ON pdpa.ID = pdp.IDAstratto
+    LEFT OUTER JOIN (
     SELECT *
-    FROM attraversamento
-    WHERE COALESCE(datapartenza, dataarrivo)::date = now()::date) a
-                         ON Treno.numero = a.idtreno
-                             AND a.idtreno = at.idtreno
-                             AND a.idpdp = pdp.id
-                             AND pdpa.id = pdp.idastratto;
+    FROM Attraversamento
+    WHERE COALESCE(DataPartenza, DataArrivo)::date = NOW()::DATE) a
+                         ON Treno.Numero = a.IDTreno
+                             AND a.IDTreno = at.IDTreno
+                             AND a.IDPdP = pdp.ID
+                             AND pdpa.ID = pdp.IDAstratto;
 
 CREATE OR REPLACE VIEW RitardoTreno AS
-    SELECT DISTINCT LAST_VALUE(ritardo)
+    SELECT DISTINCT LAST_VALUE(Ritardo)
         OVER(
-            PARTITION BY numero ORDER BY orario RANGE BETWEEN
+            PARTITION BY Numero ORDER BY Orario RANGE BETWEEN
             UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
-        ) ritardo, numero FROM ritardopdp;
+        ) Ritardo, Numero FROM RitardoPdP;
 
 CREATE OR REPLACE VIEW DestinazioneTreno AS
     SELECT DISTINCT LAST_VALUE(Nome)
         OVER(
-           PARTITION BY numero ORDER BY orario RANGE BETWEEN
+           PARTITION BY Numero ORDER BY Orario RANGE BETWEEN
            UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
-        ) Nome, numero FROM ritardopdp
+        ) Nome, Numero FROM RitardoPdP
         JOIN PuntoDiPassaggioAstratto pdpa ON pdpa.ID = RitardoPdP.IDPdP;
 
 CREATE OR REPLACE VIEW TurniPersona AS
     SELECT * FROM Persona JOIN Turno ON Turno.IDPersona = Persona.ID;
 
 CREATE OR REPLACE VIEW Composizione AS
-    SELECT esercizio.*, carrozza.* FROM Esercizio
+    SELECT Esercizio.*, Carrozza.* FROM Esercizio
         JOIN Convoglio ON Esercizio.IDConvoglio = Convoglio.ID
-        JOIN Carrozza on Convoglio.IDCarrozza = Carrozza.ID;
+        JOIN Carrozza ON Convoglio.IDCarrozza = Carrozza.ID;
 	\end{minted}
 	\subsection{Treni in arrivo in una stazione}
 	\begin{minted}{postgres}
 SELECT Categoria, RitardoPdP.Numero, Orario, RitardoTreno.Ritardo,
-    pdpa.*, dst.Nome AS destinazione
+    pdpa.*, dst.Nome AS Destinazione
     FROM RitardoPdP
     JOIN RitardoTreno ON RitardoTreno.Numero = RitardoPdP.Numero
-    JOIN PuntoDiPassaggioAstratto pdpda ON pdpa.id = RitardoPdP.IDPdP
-    JOIN DestinazioneTreno dst ON dst.numero = RitardoPdP.Numero
+    JOIN PuntoDiPassaggioAstratto pdpa ON pdpa.ID = RitardoPdP.IDPdP
+    JOIN DestinazioneTreno dst ON dst.Numero = RitardoPdP.Numero
     WHERE LOWER(pdpa.Nome) LIKE $1 AND data IS NULL;
 	\end{minted}
 	\subsection{Carrozze in un treno in un determinato giorno}
@@ -296,13 +369,13 @@ select * from composizione where idtreno = $1 and data = $2;
 	\begin{minted}{postgres}
 SELECT * FROM Esercizio
     JOIN Locomotiva ON Esercizio.idLocomotiva = Locomotiva.ID
-    WHERE Esercizio.idTreno = $1 AND data = $2;
+    WHERE Esercizio.IDTreno = $1 AND data = $2;
 	\end{minted}
 	\subsection{Punti di passaggio attraversati da un treno}
 	\begin{minted}{postgres}
-SELECT rpdp.data AS orario, pdpa.nome FROM RitardoPdP rpdp
-    LEFT JOIN PuntoDiPassaggioAstratto pdpa on rpdp.idpdp = pdpa.idpdp
-    WHERE rpdp.numero = $1 ORDER BY orario DESC
+SELECT rpdp.Data AS Orario, pdpa.Nome FROM RitardoPdP rpdp
+    LEFT JOIN PuntoDiPassaggioAstratto pdpa ON rpdp.IDPdP = pdpa.ID
+    WHERE rpdp.Numero = $1 ORDER BY orario DESC
 	\end{minted}
 	\chapter{Progettazione dell'applicazione}
 	\section{Descrizione dell'architettura dell'applicazione realizzata}
@@ -353,6 +426,9 @@ SELECT rpdp.data AS orario, pdpa.nome FROM RitardoPdP rpdp
 	\section{Esecuzione del programma}
 	\par Dopo aver scaricato l'eseguibile per la piattaforma desiderata, controllare che abbia i permessi di esecuzione (se richiesti) ed eseguirlo nella cartella in cui è stato posizionato il file \texttt{.env} e la cartella \texttt{templates}.
 	\par Il programma provvederà all'inizializzazione del DB e si metterà in ascolto sulla porta TCP 8000.
+	\section{Dataset esempio}
+	\par Vengono provviste delle query per popolare il DB con dati di esempio ai fini di testare l'applicativo.
+	Si trovano dentro un unico file: \texttt{queries/populate.sql}.
     %\printbibliography[heading=bibintoc]
     \listoffigures
 \end{document}
