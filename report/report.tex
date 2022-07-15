@@ -227,25 +227,25 @@
 	\begin{minted}{postgres}
 CREATE OR REPLACE VIEW RitardoPdP AS
 SELECT at.OrarioArrivo,
-       at.OrarioPartenza,
-       a.DataArrivo,
-       a.DataPartenza,
-       categoria,
-       numero,
-       at.idpdp,
-       (CURRENT_DATE + COALESCE(OrarioPartenza, OrarioArrivo))   AS orario,
-       COALESCE(datapartenza, dataarrivo)                        as data,
-       GREATEST(0, EXTRACT(EPOCH FROM
-                           (COALESCE(a.datapartenza, a.dataarrivo, NOW())
-                               AT TIME ZONE 'Europe/Rome') -
-                           (CURRENT_DATE + COALESCE(at.OrarioPartenza,
-                                                    at.OrarioArrivo))
-                               AT TIME ZONE 'Europe/Rome') / 60) AS ritardo
+  at.OrarioPartenza,
+  a.DataArrivo,
+  a.DataPartenza,
+  categoria,
+  numero,
+  at.idpdp,
+  (CURRENT_DATE + COALESCE(OrarioPartenza, OrarioArrivo))   AS orario,
+  COALESCE(datapartenza, dataarrivo)                        as data,
+  GREATEST(0, EXTRACT(EPOCH FROM
+                      (COALESCE(a.datapartenza, a.dataarrivo, NOW())
+                          AT TIME ZONE 'Europe/Rome') -
+                      (CURRENT_DATE + COALESCE(at.OrarioPartenza,
+                                               at.OrarioArrivo))
+                          AT TIME ZONE 'Europe/Rome') / 60) AS ritardo
 FROM treno
-         JOIN attraversamentoteorico at on treno.numero = at.idtreno
-         JOIN puntodipassaggioastratto pdpa on at.idpdp = pdpa.id
-         JOIN puntodipassaggio pdp on pdpa.id = pdp.idastratto
-         LEFT OUTER JOIN (
+    JOIN attraversamentoteorico at on treno.numero = at.idtreno
+    JOIN puntodipassaggioastratto pdpa on at.idpdp = pdpa.id
+    JOIN puntodipassaggio pdp on pdpa.id = pdp.idastratto
+    LEFT OUTER JOIN (
     SELECT *
     FROM attraversamento
     WHERE COALESCE(datapartenza, dataarrivo)::date = now()::date) a
