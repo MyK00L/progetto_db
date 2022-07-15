@@ -194,6 +194,32 @@
 	%\end{table}
 	\section{Schemi di navigazione e tabelle degli accessi}
 	\subsection{Schemi di navigazione}
+	\par Di seguito vengono riportati gli schemi di navigazione per le query più frequenti.
+	\par Tutte le interrogazioni partono da \textit{Treno}, essendo riferite all'omonima entità.
+	\begin{figure}[H]
+		\begin{center}
+		\includegraphics[width=.65\linewidth]{res/accesso/ritardo}
+		\end{center}
+		\caption{Ritardo di un treno}
+	\end{figure}
+	\begin{figure}[H]
+		\begin{center}
+		\includegraphics[width=.65\linewidth]{res/accesso/percorso}
+		\end{center}
+		\caption{Percorso di un treno, treni passanti da una stazione}
+	\end{figure}
+	\begin{figure}[H]
+		\begin{center}
+		\includegraphics[width=.55\linewidth]{res/accesso/composizione}
+		\end{center}
+		\caption{Carrozze e locomotive di un treno}
+	\end{figure}
+	\begin{figure}[H]
+		\begin{center}
+		\includegraphics[width=\linewidth]{res/accesso/turni}
+		\end{center}
+		\caption{Turni di una persona}
+	\end{figure}
 	\subsection{Tabella degli accessi}
 	\par I costi totali sono da intendere su base giornaliera. Nella colonna del numero del costo totale, si
 	calcolano gli accessi in scrittura con peso doppio rispetto agli accessi in lettura. Per evitare di
@@ -291,7 +317,7 @@ SELECT Categoria, RitardoPdP.Numero, Orario, RitardoTreno.Ritardo,
     pdpa.*, dst.Nome AS Destinazione
     FROM RitardoPdP
     JOIN RitardoTreno ON RitardoTreno.Numero = RitardoPdP.Numero
-    JOIN PuntoDiPassaggioAstratto pdpda ON pdpa.ID = RitardoPdP.IDPdP
+    JOIN PuntoDiPassaggioAstratto pdpa ON pdpa.ID = RitardoPdP.IDPdP
     JOIN DestinazioneTreno dst ON dst.Numero = RitardoPdP.Numero
     WHERE LOWER(pdpa.Nome) LIKE $1 AND data IS NULL;
 	\end{minted}
