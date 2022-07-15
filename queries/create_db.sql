@@ -82,7 +82,8 @@ CREATE TABLE IF NOT EXISTS Turno
     IDTreno   INTEGER NOT NULL,
     Data      DATE    NOT NULL,
     CONSTRAINT fk_persona FOREIGN KEY (IDPersona) REFERENCES Persona (Id),
-    CONSTRAINT fk_treno FOREIGN KEY (IDTreno) REFERENCES Treno (Numero)
+    CONSTRAINT fk_treno FOREIGN KEY (IDTreno) REFERENCES Treno (Numero),
+    UNIQUE(IDPersona, IDTreno, Data)
 );
 
 CREATE TABLE IF NOT EXISTS Locomotiva
@@ -114,7 +115,8 @@ CREATE TABLE IF NOT EXISTS Esercizio
     IDLocomotiva VARCHAR(12),
     Data         DATE    NOT NULL,
     CONSTRAINT fk_treno FOREIGN KEY (IDTreno) REFERENCES Treno (Numero),
-    CONSTRAINT fk_locomotiva FOREIGN KEY (IDLocomotiva) REFERENCES Locomotiva (ID)
+    CONSTRAINT fk_locomotiva FOREIGN KEY (IDLocomotiva) REFERENCES Locomotiva (ID),
+    UNIQUE(IDTreno, Data)
 );
 
 CREATE OR REPLACE VIEW RitardoPdP AS
