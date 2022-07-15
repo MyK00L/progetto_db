@@ -223,6 +223,32 @@
 	\subsection{Vincoli di gruppo}
 	\section{Analisi delle ridondanze}
 	\section{Traduzione di entità e associazioni in relazioni}
+	Di seguito vengono elencate le relazioni finali:
+	\begin{itemize}
+		\item \textbf{Treno}(\underline{Numero}, Categoria)
+		\item \textbf{PuntoDiPassaggioAstratto}(\underline{ID}, Nome*)
+		\item \textbf{PuntoDiPassaggio}(\underline{ID}, IDAstratto, Latitudine, Longitudine, Tipo)\\
+			FK: IDAstratto REFERENCES \textbf{PuntoDiPassaggioAstratto}
+		\item \textbf{AttraversamentoTeorico}(\underline{IDTreno}, \underline{IDPdP}, \underline{OrarioArrivo}*, \underline{OrarioPartena}*)\\
+			FK: IDTreno REFERENCES \textbf{Treno}\\
+			FK: IDPdP REFERENCES \textbf{PuntoDiPassaggioAstratto}
+		\item \textbf{Attraversamento}(\underline{IDTreno}, \underline{IDPdP}, \underline{OrarioArrivo}*, \underline{OrarioPartena}*)\\
+			FK: IDTreno REFERENCES \textbf{Treno}\\
+			FK: IDPdP REFERENCES \textbf{PuntoDiPassaggio}
+		\item \textbf{PdPStazione}(\underline{ID}, IDPdP, Binario)\\
+			FK: IDPdP REFERENCES \textbf{PuntoDiPassaggio}
+		\item \textbf{Persona}(\underline{ID}, Nome, Cognome, Ruolo)
+		\item \textbf{Turno}(\underline{IDPersona}, \underline{IDTreno}, \underline{Data})\\
+			FK: IDPersona REFERENCES \textbf{Persona}\\
+			FK: IDTreno REFERENCES \textbf{Treno}
+		\item \textbf{Locomotiva}(\underline{ID}, Velocita, Tensione)
+		\item \textbf{Carrozza}(\underline{ID}, Classe, Posti)
+		\item \textbf{Convoglio}(\underline{ID}, \underline{IDCarrozza})\\
+			FK: IDCarrozza REFERENCES \textbf{Carrozza}
+		\item \textbf{Esercizio}(\underline{IDTreno}, \underline{Data}, IDLocomotiva, IDConvoglio)\\
+			FK: IDTreno REFERENCES \textbf{Treno}\\
+			FK: IDLocomotiva REFERENCES \textbf{Locomotiva}
+	\end{itemize}
 	
 	\section{Schema relazionale finale}
 	\begin{figure}[h!]
