@@ -16,8 +16,9 @@ $$;
 CREATE TABLE IF NOT EXISTS PuntoDiPassaggioAstratto
 (
     ID   SERIAL PRIMARY KEY,
-    Nome Text
+    Nome VARCHAR(50)
 );
+CREATE INDEX idx_pdpa_nome ON PuntoDiPassaggioAstratto(nome);
 
 CREATE TABLE IF NOT EXISTS PuntoDiPassaggio
 (
