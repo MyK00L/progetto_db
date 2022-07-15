@@ -91,8 +91,8 @@ insert into esercizio (idconvoglio, idtreno, idlocomotiva, data) values (2,2,'l2
 insert into esercizio (idconvoglio, idtreno, idlocomotiva, data) values (2,2,'l20000000000','2022-07-31');
 
 /* persona */
-insert into persona (id,nome,ruolo) values (101,'Mario Rossi','Macchinista');
-insert into persona (id,nome,ruolo) values (102,'Luigi Verdi','Capotreno');
+insert into persona (id, nome, cognome, ruolo) values (101, 'Mario', 'Rossi', 'Macchinista');
+insert into persona (id ,nome, cognome, ruolo) values (102, 'Luigi', 'Verdi', 'Capotreno');
 
 /* turno */
 insert into turno (idpersona, idtreno, data) values (101,1,'2022-07-14');
