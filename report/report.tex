@@ -210,8 +210,13 @@
 	\subsection{Attributi composti}
 	\par In fase di progettazione concettuale non sono stati rilevati attributi composti.
 	\subsection{Scelta delle chiavi primarie}
+	\par Le chiavi primarie sono state scelte per ogni entità dello schema concettuale, tranne che per \textit{Convoglio}, essendo quest'ultima diventata un raggruppamento di carrozze che richiede la l'assegnazione di un identificativo ad un gruppo di carrozze. Per quanto riguarda le relazioni non sono state scelte chiavi primarie.
 	\subsection{Chiavi esterne}
 	\subsection{Vincoli di gruppo}
+	\begin{itemize}
+		\item Su \textit{Attraversamento}, \textit{AttraversamentoTeorico}, \textit{Convoglio}e \textit{Turno} è stato inserito un vincolo di unicità sulle tuple;
+		\item Su \textit{Esercizio} è stato inserito un vincolo di unicità su (\textit{idTreno}, \textit{Data})
+	\end{itemize}
 	\section{Analisi delle ridondanze}
 	\section{Traduzione di entità e associazioni in relazioni}
 	
