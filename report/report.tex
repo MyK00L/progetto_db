@@ -211,6 +211,15 @@
 	\par In fase di progettazione concettuale non sono stati rilevati attributi composti.
 	\subsection{Scelta delle chiavi primarie}
 	\subsection{Chiavi esterne}
+	\begin{itemize}
+		\item \textit{PuntoDiPassaggio}: importa la chiave \textit{ID} da \textit{PuntoDiPassaggioAstratto} con ridenominazione \textit{IDAstratto}.
+		\item \textit{AttraversamentoTeorico}: importa la chiave \textit{Numero} da \textit{Treno} con ridenominazione \textit{IDTreno} e la chiave \textit{ID} da \textit{PuntoDiPassaggio} con ridenominazione \textit{IDPdP}.
+		\item \textit{Attraversamento}: importa la chiave \textit{Numero} da \textit{Treno} con ridenominazione \textit{IDTreno} e la chiave \textit{ID} da \textit{PuntoDiPassaggio} con ridenominazione \textit{IDPdP}.
+		\item \textit{PdPStazione}: importa la chiave \textit{ID} da \textit{PuntoDiPassaggio} con ridenominazione \textit{IDPdP}.
+		\item \textit{Turno}: importa la chiave \textit{ID} da \textit{Persona} con ridenominazione \textit{IDPersona} e la chiave \textit{Numero} da \textit{Treno} con ridenominazione \textit{IDTreno}.
+		\item \textit{Convoglio}: importa la chiave \textit{ID} da \textit{Carrozza} con ridenominazione \textit{IDCarrozza}.
+		\item \textit{Esercizio}: importa la chiave \textit{Numero} da \textit{Treno} con ridenominazione \textit{IDTreno} e la chiave \textit{ID} da \textit{Locomotiva} con ridenominazione \textit{IDLocomotiva}.
+	\end{itemize}
 	\subsection{Vincoli di gruppo}
 	\section{Analisi delle ridondanze}
 	\section{Traduzione di entità e associazioni in relazioni}
