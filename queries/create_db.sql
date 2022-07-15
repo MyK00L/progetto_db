@@ -18,7 +18,19 @@ CREATE TABLE IF NOT EXISTS PuntoDiPassaggioAstratto
     ID   SERIAL PRIMARY KEY,
     Nome VARCHAR(50)
 );
-CREATE INDEX IF NOT EXISTS idx_pdpa_nome ON PuntoDiPassaggioAstratto(nome);
+DO
+$$
+    BEGIN
+IF NOT EXISTS (
+    SELECT count(*) > 0
+    FROM pg_class c
+    WHERE c.relname = 'idx_pdpa_nome'
+    AND c.relkind = 'i'
+) THEN
+CREATE INDEX idx_pdpa_nome ON PuntoDiPassaggioAstratto(nome)§
+END IF§
+END
+$$;
 
 CREATE TABLE IF NOT EXISTS PuntoDiPassaggio
 (
