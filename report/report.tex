@@ -215,6 +215,15 @@
 	\subsection{Scelta delle chiavi primarie}
 	\par Le chiavi primarie sono state scelte per ogni entità dello schema concettuale, tranne che per \textit{Convoglio}, essendo quest'ultima diventata un raggruppamento di carrozze che richiede la l'assegnazione di un identificativo ad un gruppo di carrozze. Per quanto riguarda le relazioni non sono state scelte chiavi primarie.
 	\subsection{Chiavi esterne}
+	\begin{itemize}
+		\item \textit{PuntoDiPassaggio}: importa la chiave \textit{ID} da \textit{PuntoDiPassaggioAstratto} con ridenominazione \textit{IDAstratto}.
+		\item \textit{AttraversamentoTeorico}: importa la chiave \textit{Numero} da \textit{Treno} con ridenominazione \textit{IDTreno} e la chiave \textit{ID} da \textit{PuntoDiPassaggio} con ridenominazione \textit{IDPdP}.
+		\item \textit{Attraversamento}: importa la chiave \textit{Numero} da \textit{Treno} con ridenominazione \textit{IDTreno} e la chiave \textit{ID} da \textit{PuntoDiPassaggio} con ridenominazione \textit{IDPdP}.
+		\item \textit{PdPStazione}: importa la chiave \textit{ID} da \textit{PuntoDiPassaggio} con ridenominazione \textit{IDPdP}.
+		\item \textit{Turno}: importa la chiave \textit{ID} da \textit{Persona} con ridenominazione \textit{IDPersona} e la chiave \textit{Numero} da \textit{Treno} con ridenominazione \textit{IDTreno}.
+		\item \textit{Convoglio}: importa la chiave \textit{ID} da \textit{Carrozza} con ridenominazione \textit{IDCarrozza}.
+		\item \textit{Esercizio}: importa la chiave \textit{Numero} da \textit{Treno} con ridenominazione \textit{IDTreno} e la chiave \textit{ID} da \textit{Locomotiva} con ridenominazione \textit{IDLocomotiva}.
+	\end{itemize}
 	\subsection{Vincoli di gruppo}
 	\begin{itemize}
 		\item Su \textit{Attraversamento}, \textit{AttraversamentoTeorico}, \textit{Convoglio}e \textit{Turno} è stato inserito un vincolo di unicità sulle tuple;
@@ -222,6 +231,32 @@
 	\end{itemize}
 	\section{Analisi delle ridondanze}
 	\section{Traduzione di entità e associazioni in relazioni}
+	Di seguito vengono elencate le relazioni finali:
+	\begin{itemize}
+		\item \textbf{Treno}(\underline{Numero}, Categoria)
+		\item \textbf{PuntoDiPassaggioAstratto}(\underline{ID}, Nome*)
+		\item \textbf{PuntoDiPassaggio}(\underline{ID}, IDAstratto, Latitudine, Longitudine, Tipo)\\
+			FK: IDAstratto REFERENCES \textbf{PuntoDiPassaggioAstratto}
+		\item \textbf{AttraversamentoTeorico}(\underline{IDTreno}, \underline{IDPdP}, \underline{OrarioArrivo}*, \underline{OrarioPartena}*)\\
+			FK: IDTreno REFERENCES \textbf{Treno}\\
+			FK: IDPdP REFERENCES \textbf{PuntoDiPassaggioAstratto}
+		\item \textbf{Attraversamento}(\underline{IDTreno}, \underline{IDPdP}, \underline{OrarioArrivo}*, \underline{OrarioPartena}*)\\
+			FK: IDTreno REFERENCES \textbf{Treno}\\
+			FK: IDPdP REFERENCES \textbf{PuntoDiPassaggio}
+		\item \textbf{PdPStazione}(\underline{ID}, IDPdP, Binario)\\
+			FK: IDPdP REFERENCES \textbf{PuntoDiPassaggio}
+		\item \textbf{Persona}(\underline{ID}, Nome, Cognome, Ruolo)
+		\item \textbf{Turno}(\underline{IDPersona}, \underline{IDTreno}, \underline{Data})\\
+			FK: IDPersona REFERENCES \textbf{Persona}\\
+			FK: IDTreno REFERENCES \textbf{Treno}
+		\item \textbf{Locomotiva}(\underline{ID}, Velocita, Tensione)
+		\item \textbf{Carrozza}(\underline{ID}, Classe, Posti)
+		\item \textbf{Convoglio}(\underline{ID}, \underline{IDCarrozza})\\
+			FK: IDCarrozza REFERENCES \textbf{Carrozza}
+		\item \textbf{Esercizio}(\underline{IDTreno}, \underline{Data}, IDLocomotiva, IDConvoglio)\\
+			FK: IDTreno REFERENCES \textbf{Treno}\\
+			FK: IDLocomotiva REFERENCES \textbf{Locomotiva}
+	\end{itemize}
 	
 	\section{Schema relazionale finale}
 	\begin{figure}[h!]
