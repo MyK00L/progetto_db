@@ -62,7 +62,7 @@ $$;
 CREATE TABLE IF NOT EXISTS Turno
 (
     IDPersona INTEGER NOT NULL,
-    Ruolo TipoRuolo,
+    Ruolo     TipoRuolo NOT NULL,
     IDTreno   INTEGER NOT NULL,
     Data      DATE    NOT NULL
 );
