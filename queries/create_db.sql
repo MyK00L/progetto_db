@@ -71,9 +71,9 @@ $$;
 CREATE TABLE IF NOT EXISTS Persona
 (
     ID      SERIAL PRIMARY KEY,
-    Nome    TEXT,
-    Cognome TEXT,
-    Ruolo TipoRuolo
+    Nome    TEXT NOT NULL,
+    Cognome TEXT NOT NULL,
+    Ruolo TipoRuolo NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Turno
@@ -112,7 +112,7 @@ CREATE TABLE IF NOT EXISTS Esercizio
 (
     IDConvoglio  INTEGER NOT NULL,
     IDTreno      INTEGER NOT NULL,
-    IDLocomotiva VARCHAR(12),
+    IDLocomotiva VARCHAR(12) NOT NULL,
     Data         DATE    NOT NULL,
     CONSTRAINT fk_treno FOREIGN KEY (IDTreno) REFERENCES Treno (Numero),
     CONSTRAINT fk_locomotiva FOREIGN KEY (IDLocomotiva) REFERENCES Locomotiva (ID),
