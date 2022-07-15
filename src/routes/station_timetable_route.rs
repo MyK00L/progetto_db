@@ -16,14 +16,14 @@ pub async fn station_timetable(name: String, db: crate::DbConn) -> Template {
         ora_arrivo_destinazione: String,
         orario: chrono::NaiveDateTime,
         ritardo: f64,
-        binario: String,
+        binario: Option<String>,
     }
     let station = name.clone();
     let cols = db
         .run(move |conn| {
             conn
         .query(
-            "SELECT Categoria, RitardoPdP.Numero, Orario, RitardoTreno.Ritardo, PdPStazione.*, dst.Nome AS destinazione FROM RitardoPdP JOIN RitardoTreno ON RitardoTreno.Numero = RitardoPdP.Numero JOIN PdPStazione ON PdPStazione.IDPdP = RitardoPdP.IDPdP JOIN DestinazioneTreno dst ON dst.numero = RitardoPdP.Numero WHERE LOWER(PdPStazione.Nome) LIKE $1 AND data IS NULL;",
+            "SELECT Categoria, RitardoPdP.Numero, Orario, RitardoTreno.Ritardo, pdpa.*, dst.Nome AS destinazione FROM RitardoPdP JOIN RitardoTreno ON RitardoTreno.Numero = RitardoPdP.Numero JOIN PuntoDiPassaggioAstratto pdpa ON pdpa.ID = RitardoPdP.IDPdP JOIN DestinazioneTreno dst ON dst.numero = RitardoPdP.Numero WHERE LOWER(pdpa.Nome) LIKE $1 AND data IS NULL;",
             &[&format!("%{}%", name.to_lowercase())],
         )
         .unwrap()
@@ -42,7 +42,7 @@ pub async fn station_timetable(name: String, db: crate::DbConn) -> Template {
                     ora_arrivo_destinazione: "todo!()".to_owned(),
                     orario: x.get("orario"),
                     ritardo: x.get("ritardo"),
-                    binario: x.get("binario"),
+                    binario: None,
                 })
                 .collect::<Vec<_>>(),
         },

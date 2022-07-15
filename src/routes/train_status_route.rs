@@ -3,7 +3,7 @@ use rocket_dyn_templates::Template;
 use serde::Serialize;
 
 #[get("/train_status/<train_number>")]
-pub async fn train_status(train_number: i32, db: crate::DbConn) -> Template {
+pub async fn train_status(train_number: i32, db: crate::DbConn) -> Option<Template> {
     #[derive(Debug, Serialize)]
     struct Item {
         name: String,
@@ -24,7 +24,7 @@ pub async fn train_status(train_number: i32, db: crate::DbConn) -> Template {
     }
     let (ultimo_pdp_nome, ultimo_pdp_orario) = db
         .run(move |conn| {
-            conn.query("SELECT rpdp.data AS orario, pdpa.nome FROM RitardoPdP rpdp LEFT JOIN PuntoDiPassaggioAstratto pdpa on rpdp.idpdp = pdpa.idpdp WHERE rpdp.numero = $1 ORDER BY orario DESC;", &[&train_number])
+            conn.query("SELECT rpdp.data AS orario, pdpa.nome FROM RitardoPdP rpdp LEFT JOIN PuntoDiPassaggioAstratto pdpa on rpdp.idpdp = pdpa.id WHERE rpdp.numero = $1 ORDER BY orario DESC;", &[&train_number])
                 .unwrap()
         })
         .await.iter().map(|x| (x.get("nome"),x.get::<_,Option<chrono::NaiveDateTime>>("orario"))).find(|x| (x.1).is_some()).unwrap_or_default();
@@ -53,13 +53,12 @@ pub async fn train_status(train_number: i32, db: crate::DbConn) -> Template {
         .await
         .iter()
         .map(|col| col.get("Categoria"))
-        .next()
-        .unwrap();
+        .next()?;
     let cols = db
         .run(move |conn| {
             conn
         .query(
-            "SELECT OrarioArrivo, OrarioPartenza, DataArrivo, DataPartenza, Nome FROM PuntoDiPassaggioAstratto, RitardoPdP WHERE RitardoPdP.numero = $1 AND RitardoPdP.idpdp = PuntoDiPassaggioAstratto.id ORDER BY OrarioArrivo",
+            "SELECT OrarioArrivo, OrarioPartenza, DataArrivo, DataPartenza, Nome FROM PuntoDiPassaggioAstratto, RitardoPdP WHERE RitardoPdP.numero = $1 AND RitardoPdP.idpdp = PuntoDiPassaggioAstratto.id ORDER BY Coalesce(OrarioArrivo,OrarioPartenza)",
             &[&train_number],
         ).unwrap()
         })
@@ -82,5 +81,5 @@ pub async fn train_status(train_number: i32, db: crate::DbConn) -> Template {
             })
             .collect(),
     };
-    Template::render("train_status", &context)
+    Some(Template::render("train_status", &context))
 }

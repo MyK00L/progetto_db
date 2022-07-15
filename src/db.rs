@@ -12,10 +12,10 @@ pub static POOL: Lazy<r2d2::Pool<ConnManager>> = Lazy::new(|| {
             std::env::var("DB_NAME").expect("DB_NAME undefined"),
         )
         .parse()
-        .unwrap(),
+        .expect("failed to parse connection configuration"),
         NoTls,
     );
-    r2d2::Pool::new(manager).unwrap()
+    r2d2::Pool::new(manager).expect("failed to create connection manager")
 });
 pub fn create_db() -> Result<(), String> {
     let pool = POOL.clone();

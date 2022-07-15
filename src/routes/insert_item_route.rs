@@ -55,11 +55,11 @@ pub async fn insert_item(tablename: String, db: crate::DbConn) -> Option<Templat
         })
         .await;
 
-    let re = Regex::new(r"^FOREIGN KEY \((\w+)\) REFERENCES (\w+)\((\w+)\)$").unwrap();
+    let re = Regex::new(r"^FOREIGN KEY \((\w+)\) REFERENCES (\w+)\((\w+)\)$").ok()?;
     let mut completion = std::collections::HashMap::<String, Vec<String>>::new();
     for i in fks.iter() {
         let text: String = i.get(0);
-        let cap = re.captures(&text).unwrap();
+        let cap = re.captures(&text)?;
         let col = String::from(&cap[1]);
         let table = String::from(&cap[2]);
         let id = String::from(&cap[3]);

@@ -58,7 +58,12 @@
                     <option value="carrozza">Carrozza</option>
                     <option value="esercizio">Esercizio</option>
                     <option value="convoglio">Convoglio</option>
-                </select>
+								    <option value="composizione">Composizione treni</option>
+								    <option value="destinazionetreno">Destinazione treni</option>
+								    <option value="ritardopdp">Ritardo al punto di passaggio</option>
+								    <option value="ritardotreno">Ritardo dei treni</option>
+								    <option value="turnipersona">Turni</option>
+								</select>
             </p>
             <a target="_blank" id="list" href="/list/" class="btn btn-primary">Mostra</a>
         </div>

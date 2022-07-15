@@ -4,12 +4,16 @@
 
 <h2>Composizione treno</h2>
 <main>
-	<p>Posti prima classe liberi: {{class_1_seats}}</p>
-	<p>Posti seconda classe liberi: {{class_2_seats}}</p>
-	<p>Coaches</p>
+	<p>Velocit&agrave; locomotiva: {{locomotive.speed}} km/h</p>
+	<p>Tensione locomotiva: {{locomotive.power}}</p>
+	<p>Posti prima classe: {{class_1_seats}}</p>
+	<p>Posti seconda classe: {{class_2_seats}}</p>
+	<p>Carrozze</p>
+	<ul>
 	{% for coach in coaches %}
-	<p>classe: {{coach.class}} posti: {{coach.seats}}</p>
+	<li>classe: {{coach.class}} posti: {{coach.seats}}</li>
 	{% endfor %}
+	</ul>
 </main>
 {% endblock content %}
 
