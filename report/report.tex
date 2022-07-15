@@ -258,7 +258,7 @@
 	\section{Analisi delle ridondanze}
 	\par Seppure il costo delle operazioni più comuni abbia un forte impatto sul DB, ciò è dovuto principalmente all'elevata mole di richieste che dovrà gestire il sistema, più che alle operazioni stesse.
 	\par Per questo motivo non si ritiene necessario l'aggiunta di attributi o relazioni ridondanti.
-	\par Si è invece scelto di convertire il tipo del campo \texttt{Nome} nella tabella \texttt{PuntoDiPassaggioAstratto} in \texttt{VARCHAR(50)} da \texttt{TEXT}, in modo da poter aggiungere un indice per velocizzare le operazioni di ricerca delle stazioni.
+	\par Si è invece scelto di convertire il tipo del campo \texttt{Nome} nella tabella \\ \texttt{PuntoDiPassaggioAstratto} in \texttt{VARCHAR(50)} da \texttt{TEXT}, in modo da poter aggiungere un indice per velocizzare le operazioni di ricerca delle stazioni.
 	\par Ciò comporta un aumento del carico di lavoro durante gli inserimenti, ritenuto però trascurabile visto l'impatto che essi hanno sul totale del carico di lavoro della base di dati.
 	\section{Traduzione di entità e associazioni in relazioni}
 	Di seguito vengono elencate le relazioni finali:
