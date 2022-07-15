@@ -218,7 +218,7 @@
 	\subsection{Vincoli di gruppo}
 	\begin{itemize}
 		\item Su \textit{Attraversamento}, \textit{AttraversamentoTeorico}, \textit{Convoglio}e \textit{Turno} è stato inserito un vincolo di unicità sulle tuple;
-		\item Su \textit{Esercizio} è stato inserito un vincolo di unicità su (\textit{idTreno}, \textit{Data})
+		\item Su \textit{Esercizio} è stato inserito un vincolo di unicità su (\textit{IDTreno}, \textit{Data})
 	\end{itemize}
 	\section{Analisi delle ridondanze}
 	\section{Traduzione di entità e associazioni in relazioni}
@@ -238,61 +238,61 @@ SELECT at.OrarioArrivo,
   at.OrarioPartenza,
   a.DataArrivo,
   a.DataPartenza,
-  categoria,
-  numero,
-  at.idpdp,
-  (CURRENT_DATE + COALESCE(OrarioPartenza, OrarioArrivo))   AS orario,
-  COALESCE(datapartenza, dataarrivo)                        as data,
+  Categoria,
+  Numero,
+  at.IDPdP,
+  (CURRENT_DATE + COALESCE(OrarioPartenza, OrarioArrivo))   AS Orario,
+  COALESCE(datapartenza, dataarrivo)                        as Data,
   GREATEST(0, EXTRACT(EPOCH FROM
-                      (COALESCE(a.datapartenza, a.dataarrivo, NOW())
+                      (COALESCE(a.DataPartenza, a.DataArrivo, NOW())
                           AT TIME ZONE 'Europe/Rome') -
                       (CURRENT_DATE + COALESCE(at.OrarioPartenza,
                                                at.OrarioArrivo))
-                          AT TIME ZONE 'Europe/Rome') / 60) AS ritardo
-FROM treno
-    JOIN attraversamentoteorico at on treno.numero = at.idtreno
-    JOIN puntodipassaggioastratto pdpa on at.idpdp = pdpa.id
-    JOIN puntodipassaggio pdp on pdpa.id = pdp.idastratto
+                          AT TIME ZONE 'Europe/Rome') / 60) AS Ritardo
+FROM Treno
+    JOIN AttraversamentoTeorico at ON Treno.Numero = at.IDTreno
+    JOIN PuntoDiPassaggioAstratto pdpa ON at.IDPdP = pdpa.ID
+    JOIN PuntoDiPassaggio pdp ON pdpa.ID = pdp.IDAstratto
     LEFT OUTER JOIN (
     SELECT *
-    FROM attraversamento
-    WHERE COALESCE(datapartenza, dataarrivo)::date = now()::date) a
-                         ON Treno.numero = a.idtreno
-                             AND a.idtreno = at.idtreno
-                             AND a.idpdp = pdp.id
-                             AND pdpa.id = pdp.idastratto;
+    FROM Attraversamento
+    WHERE COALESCE(DataPartenza, DataArrivo)::date = NOW()::DATE) a
+                         ON Treno.Numero = a.IDTreno
+                             AND a.IDTreno = at.IDTreno
+                             AND a.IDPdP = pdp.ID
+                             AND pdpa.ID = pdp.IDAstratto;
 
 CREATE OR REPLACE VIEW RitardoTreno AS
-    SELECT DISTINCT LAST_VALUE(ritardo)
+    SELECT DISTINCT LAST_VALUE(Ritardo)
         OVER(
-            PARTITION BY numero ORDER BY orario RANGE BETWEEN
+            PARTITION BY Numero ORDER BY Orario RANGE BETWEEN
             UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
-        ) ritardo, numero FROM ritardopdp;
+        ) Ritardo, Numero FROM RitardoPdP;
 
 CREATE OR REPLACE VIEW DestinazioneTreno AS
     SELECT DISTINCT LAST_VALUE(Nome)
         OVER(
-           PARTITION BY numero ORDER BY orario RANGE BETWEEN
+           PARTITION BY Numero ORDER BY Orario RANGE BETWEEN
            UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
-        ) Nome, numero FROM ritardopdp
+        ) Nome, Numero FROM RitardoPdP
         JOIN PuntoDiPassaggioAstratto pdpa ON pdpa.ID = RitardoPdP.IDPdP;
 
 CREATE OR REPLACE VIEW TurniPersona AS
     SELECT * FROM Persona JOIN Turno ON Turno.IDPersona = Persona.ID;
 
 CREATE OR REPLACE VIEW Composizione AS
-    SELECT esercizio.*, carrozza.* FROM Esercizio
+    SELECT Esercizio.*, Carrozza.* FROM Esercizio
         JOIN Convoglio ON Esercizio.IDConvoglio = Convoglio.ID
-        JOIN Carrozza on Convoglio.IDCarrozza = Carrozza.ID;
+        JOIN Carrozza ON Convoglio.IDCarrozza = Carrozza.ID;
 	\end{minted}
 	\subsection{Treni in arrivo in una stazione}
 	\begin{minted}{postgres}
 SELECT Categoria, RitardoPdP.Numero, Orario, RitardoTreno.Ritardo,
-    pdpa.*, dst.Nome AS destinazione
+    pdpa.*, dst.Nome AS Destinazione
     FROM RitardoPdP
     JOIN RitardoTreno ON RitardoTreno.Numero = RitardoPdP.Numero
-    JOIN PuntoDiPassaggioAstratto pdpda ON pdpa.id = RitardoPdP.IDPdP
-    JOIN DestinazioneTreno dst ON dst.numero = RitardoPdP.Numero
+    JOIN PuntoDiPassaggioAstratto pdpda ON pdpa.ID = RitardoPdP.IDPdP
+    JOIN DestinazioneTreno dst ON dst.Numero = RitardoPdP.Numero
     WHERE LOWER(pdpa.Nome) LIKE $1 AND data IS NULL;
 	\end{minted}
 	\subsection{Carrozze in un treno in un determinato giorno}
@@ -304,13 +304,13 @@ select * from composizione where idtreno = $1 and data = $2;
 	\begin{minted}{postgres}
 SELECT * FROM Esercizio
     JOIN Locomotiva ON Esercizio.idLocomotiva = Locomotiva.ID
-    WHERE Esercizio.idTreno = $1 AND data = $2;
+    WHERE Esercizio.IDTreno = $1 AND data = $2;
 	\end{minted}
 	\subsection{Punti di passaggio attraversati da un treno}
 	\begin{minted}{postgres}
-SELECT rpdp.data AS orario, pdpa.nome FROM RitardoPdP rpdp
-    LEFT JOIN PuntoDiPassaggioAstratto pdpa on rpdp.idpdp = pdpa.idpdp
-    WHERE rpdp.numero = $1 ORDER BY orario DESC
+SELECT rpdp.Data AS Orario, pdpa.Nome FROM RitardoPdP rpdp
+    LEFT JOIN PuntoDiPassaggioAstratto pdpa ON rpdp.IDPdP = pdpa.ID
+    WHERE rpdp.Numero = $1 ORDER BY orario DESC
 	\end{minted}
 	\chapter{Progettazione dell'applicazione}
 	\section{Descrizione dell'architettura dell'applicazione realizzata}
