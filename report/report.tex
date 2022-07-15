@@ -5,8 +5,10 @@
 \usepackage[T1]{fontenc}
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage{longtable}
 \usepackage{minted}
 \usepackage{pdfpages}
+\usepackage{supertabular}
 \restylefloat{table}
 %\usepackage[style=numeric-comp]{biblatex}
 
@@ -31,14 +33,15 @@
 	\par Un treno è poi composto da una locomotiva (della quale ci interessa conoscere la velocità e la tensione di esercizio) e una serie di carrozze (delle quali ci interessa memorizzare la classe\textsuperscript{4} e il numero di posti), che formano un convoglio.
 	\par Su un treno prendono servizio un macchinista, un capotreno e, in certi casi, dei controllori.
 
-	\begin{tabular}{|p{1cm}|p{3cm}|p{4cm}|p{4cm}|}
+	\begin{longtable}{|p{1cm}|p{3cm}|p{4cm}|p{4cm}|}
 		\hline
 		\textbf{N} & \textbf{Espressione} & \textbf{Sostituzione} & \textbf{Motivazione} \\ \hline
+		\endhead
 		1 & Operare & Interagire con il sistema & Esplicitato il concetto  \\ \hline
 		2 & Punti di passaggio & rappresentati nel mondo fisico da eurobalise & specificato il significato \\ \hline
 		3 & Semplici & in tutti gli altri casi & specificato il significato \\ \hline
 		4 & classe & classe (prima o seconda) & specificato il significato \\ \hline
-	\end{tabular}
+	\end{longtable}
 
 	\subsection{Dopo la correzione delle ambiguità}
 	\par RFS (Rete Ferroviaria dello Stato) richiede la realizzazione di un sistema informativo in grado di monitorare la marcia e la programmazione dei treni e la gestione dei turni del personale di bordo. Viene richiesta la possibilità di interagire con il sistema tramite interfaccia web, in modo da essere indipendenti dalle piattaforme utilizzate.
@@ -133,11 +136,11 @@
 	\chapter{Progettazione logica}
 	\section{Stima del volume dei dati}
 	\par Si ripoerao le stime dei volumi dei dati dopo un anno di operatività.
-	\begin{table}[H]
-	\centering
-	\begin{tabular}{|l|l|l|}
+	%\begin{table}[H]
+	%\centering
+	\begin{longtable}{|l|l|l|}
 		\hline \textbf{Nome} & \textbf{Tipo} & \textbf{Volume} \\
-		\hline Treno & E & 30000 \\
+		\hline \endhead Treno & E & 30000 \\
 		\hline PuntoDiPassaggio & E & 10000 \\
 		\hline Stazione & E & 1000 \\
 		\hline Semplice & E & 6000 \\
@@ -161,15 +164,15 @@
 		\hline Convoglio & E & 20000 \\
 		\hline Esercizio & R & 10950000 \\
 		\hline
-	\end{tabular}
-	\end{table}
+	\end{longtable}
+	%\end{table}
 	\section{Descrizione delle operazioni principali e stima della loro frequenza}
 	Di seguito si riportano le operazioni effettuate e la stima della loro frequenza dopo un anno di operatività.
-	\begin{table}[H]
-	\centering
-	\begin{tabular}{|l|l|l|}
+	%\begin{table}[H]
+	%\centering
+	\begin{longtable}{|l|l|l|}
 		\hline \textbf{N} & \textbf{Descrizione} & \textbf{Frequenza} \\
-		\hline 1 & Treno: inserimento & 1/settimana \\
+		\hline \endhead 1 & Treno: inserimento & 1/settimana \\
 		\hline 2 & PuntoDiPassaggio: inserimento & 1/mese \\
 		\hline 3 & AttraversamentoTeorico: inserimento & 1/giorno \\
 		\hline 4 & Attraversamento: inserimento & 9000000/giorno \\
@@ -187,8 +190,8 @@
 		\hline 16 & Composizione treno: interrogazione & 50000/giorno \\
 		\hline 17 & Turni persona: interrogazione & 100000/giorno \\
 		\hline
-	\end{tabular}
-	\end{table}
+	\end{longtable}
+	%\end{table}
 	\section{Schemi di navigazione e tabelle degli accessi}
 	\subsection{Schemi di navigazione}
 	\subsection{Tabella degli accessi}
